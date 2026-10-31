@@ -22,6 +22,8 @@ DSH桌面说明：<https://github.com/deepseek-ai/deepseek-harness/tree/master/a
 网页profile通常为`web`，桌面为`desktop`。随包 `install-plugins.ps1 -DshCli '<实际路径>' -Profile desktop -Plugins aurabot` 只装 Aurabot；`-Plugins pet` 只装桌宠；仅两者都缺且都选中才用 `-Plugins aurabot,pet`。脚本不会自动判断已安装状态，必须由 Agent 预检后调用，不把它当完整诊断器。失败先查网络/代理/日志，不清用户配置。成功退出码后仍需重启检查所选插件面板。
 两插件彼此独立：桌宠出现不代表QQ/音频已接好。
 
+部署桌宠还必须按[显示与重复实例检查](pet-display-and-duplicates.md)核对显示位置和运行实例。首次仅需桌面悬浮时采用 `display=desktop`，避免网页与桌面双显示被误认成重复安装；已有偏好不擅改。不要为每个聊天会话另起桌宠。
+
 ## 路径必须逐项检查
 
 | 对象 | 配置/常见默认 | 处理 |
