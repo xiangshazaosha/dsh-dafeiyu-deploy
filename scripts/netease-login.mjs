@@ -55,6 +55,15 @@ try {
   createdImage = true;
   console.log('LOGIN_STATE=waiting_for_scan');
   console.log('QR_IMAGE=' + image);
+  // Open the local image for the user; never send the login QR to a remote service.
+  if (process.platform === 'win32') {
+    try {
+      const viewer = spawn('rundll32.exe', ['url.dll,FileProtocolHandler', image], { detached: true, stdio: 'ignore', windowsHide: false });
+      await new Promise((resolve, reject) => { viewer.once('spawn', resolve); viewer.once('error', reject); });
+      viewer.unref();
+      console.log('QR_VIEWER=launched');
+    } catch { console.log('QR_VIEWER=open_failed'); }
+  } else { console.log('QR_VIEWER=manual'); }
   const deadline = Date.now() + 240000;
   let previous = 801;
   let failures = 0;

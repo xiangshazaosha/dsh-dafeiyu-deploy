@@ -25,6 +25,8 @@ description: 为已安装 DeepSeek Harness 的用户按需部署、补齐或修�
 
 这些是稳定的功能编号，不是必须按顺序执行的安装步骤。用户主动要求“整套”才规划全套；账号登录、外发、费用和许可仍分别处理。目录迁移、升级和故障诊断也可单独请求，不绑定全套安装。
 
+选择网易云点歌或完整唱歌链且选择网易云作为歌曲来源时，自动准备并接入 Aurabot 的网易云功能；已有有效登录直接复用，否则自动展示扫码二维码，由用户本人扫码确认。扫码等待不阻塞其他独立部署；其他可执行项目全部完成后，再检查网易云登录状态，仍未登录则再次提醒并展示有效二维码（过期则重新生成一次），不要只列待办就结束。已登录或用户明确跳过时不再提醒。详见 [网易云点歌及账号](references/rvc-cpu.md#网易云点歌及账号)。这不等于必须安装网易云桌面播放器。
+
 选择桌宠时，部署后执行[显示位置与重复实例检查](references/pet-display-and-duplicates.md)：首次只需桌面悬浮默认单一桌面显示，不因多个聊天会话重复启动；保留用户明确的多宠物/双端偏好。
 
 ## 先用大白话解释，再按电脑推荐
@@ -69,7 +71,7 @@ description: 为已安装 DeepSeek Harness 的用户按需部署、补齐或修�
 - `scripts/find-snowluma.ps1`：无需先安装 Aurabot，按配置、进程和有限目录只读查找已有 SnowLuma；不启动、登录、注入或改密码。首次安装/重装复用/控制台接管/加载闪退按[安装复用与故障流程](references/snowluma-setup-and-reuse.md)处理，适用于所有用户。
 - `scripts/patch-aurabot-attach.py` 与 `scripts/test-qq-attach-guard.mjs`：QQ 接入前检查/测试管理侧防护，仅适配精确版本及源码哈希；按[加载故障与自动防护](references/snowluma-setup-and-reuse.md)备份后应用。不修改 SnowLuma，不保证修复原生组件；不能把 HTTP 加载请求已接受称作实际接入成功。
 - `scripts/prepare-cpu.py`：从匹配的已安装 Aurabot 创建独立 CPU 安装器，先 `--check-only`；详见 RVC 参考。它不下载或安装 SnowLuma。
-- `scripts/netease-login.mjs`：可选的本机网易云扫码辅助。用户本人扫码确认，助手只将成功登录信息提交给本机 Aurabot，不打印或打包凭据；详见 RVC 参考。
+- `scripts/netease-login.mjs`：本机网易云扫码辅助，Windows 自动打开二维码。用户本人扫码确认，助手只将成功登录信息提交给本机 Aurabot，不打印或打包凭据；详见 RVC 参考。
 - `assets/song-library/`：成品库优先扩展源文件；只在选择该功能且兼容性/权限检查通过后安装。不是原插件功能，不含任何用户歌曲、索引或模型；详见成品优先参考。
 
 遵从实际工具权限和用户的电脑操作约束；失败读错误并有限重试。无成功证据就报告待完成，不编造验收结果。
