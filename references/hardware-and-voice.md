@@ -61,6 +61,10 @@ CPU新部署先测10–20秒，记录实际耗时，告知是短片段。每阶�
 
 ## 核对上游（部署当时重新查，不当永久支持矩阵）
 
+新增已验证选项：用户明确选择 Breeze TTS 2 或 AMD 本机离线语音时，按 [Breeze C++ 路线](breeze-tts2-cpp.md)核对第三方 Vulkan 发行包、模型许可、配套 tokenizer 和本机真实速度；不再把“A卡不能用”当统一结论。RX 7700 XT 的一次兼容模式成功不说明 RVC 也已接通 AMD，也不保证别的驱动速度。
+
+只增加女声/角色 RVC 权重时按[追加音色](rvc-extra-voices.md)，不重新准备整套环境；要可见的声音和回复方式开关按[独立控制页](voice-controls.md)。
+
 2026-10-31核对的原始资料：
 - [edge-tts项目](https://github.com/rany2/edge-tts)：在线语音、无需安装Edge浏览器，声音可查询。
 - [GPT-SoVITS官方README](https://github.com/RVC-Boss/GPT-SoVITS/blob/main/README.md)：列CPU等已测环境、按设备安装；这不等于当前Aurabot已适配所有模式。

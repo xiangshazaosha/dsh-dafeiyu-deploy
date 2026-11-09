@@ -33,6 +33,22 @@ Windows 可运行随包只读助手：
 - `hookAutoLoad=false` 不表示无法自动化：Aurabot 可通过已认证接口定向接入机器人。不要为省一次点击启用“加载所有 QQ”；始终避开日常个人主号。账号不明就暂停，不能拿主号试注入。
 - 网页手动 Load 与 API 自动 Load 最终都要加载同一套原生组件。手动加载导致崩溃时，改成自动点击/自动调用不能修好组件，也不能把它包装成优化成功。
 
+## 控制台在运行但消息网关断线
+
+用户说网关连不上时先脱敏只读检查，不把断线归因于刚安装的声音，也不默认重启个人 QQ、开自动注入或反复重装：
+
+1. 用 `scripts/aurabot.ps1 -Mode Status` 发现当前 DSH loopback API；检查总开关、dryRun、gateway、onebot.state/problem、SnowLuma 是否运行及实际端点监听。控制台端口活着不表示 OneBot WS/HTTP 活着。
+2. 通过本机 `/snowluma/login-check` 和 `/snowluma/processes` 检查管理认证与进程；只报告 isBot、是否已识别身份、injected/connected/loggedIn/status/error，不打印QQ号、昵称、Token、整包 state 或配置。认证失败先报告，不自动重置密码或删凭据；协议确认须本人完成。
+3. 控制台在跑、目标消息端口未监听、唯一机器人进程已核对但 injected=false，才是“网关未接入机器人”的证据。多个QQ时不碰非机器人或未知账号；`loggedIn=false` 的未接入进程不能单凭它断言用户已退出QQ，需结合 account 标识和真实客户端/网关状态。
+4. 用户明确“修复”后，在现有接入防护已加载、没有近期关联崩溃且机器人身份加载前可核对的前提下，只执行一次 `/snowluma/attach`；读回唯一机器人 injected/connected/loggedIn=true，再执行 `/onebot/reconnect`。附件load成功先于异步连接，不能仅凭success报告成功。身份未知、加载失败或退出就停，按下节诊断，不重复碰运气。
+5. 再读 `onebot.state=connected` 与 `login.uin==config.botQQ`，核对总开关与试运行保持原设置；个人号 injected 仍未改。网关恢复与真正回复分开：请主人自己发唯一测试句，再检查真实入站/模型/出站/播放；部署者不擅自发测试消息。
+
+`scripts/repair-qq-gateway.ps1 -BaseUrl <已发现地址>` 默认只读。`-Repair -PluginDir <已安装Aurabot目录>` 才可能接入，要求唯一已识别机器人、不同于主人、已经加载 `verified-attach-v2` 防护且近期无 QQ/SnowLuma 崩溃；不能证明运行时已加载防护就停在人工核对，不绕过。它不启动/安装网关、不处理协议/密码、不修改总开关或 autoStart/autoAttach，也不循环注入。状态正常可直接重连，不对个人号操作。若需要长期自动接入，另说明并确认该设置，不能借修复擅自启用“所有QQ自动加载”。
+
+2026-11-09 实测：既有网关控制台运行、消息端口未监听；只对已识别机器人重新接入，再重连后 connected 且身份匹配，非机器人未注入；保持原配置，未主动外发、未确认收件人播放。这是历史一次修复，不意味着所有1006断开都同因。
+
+离线测试 `scripts/test-repair-qq-gateway.ps1` 使用假的本机API/进程和事件，覆盖只读、单次定向接入、歧义/未知身份、近期崩溃、加载失败不重试、禁用时不擅自激活；不执行真实注入。
+
 ## QQ 加载后退出：停止复试，先查证据
 
 ### 已核实的 Windows 2.3.0 故障与修复入口（2026-10-31）

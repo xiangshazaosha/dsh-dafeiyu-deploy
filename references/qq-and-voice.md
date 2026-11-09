@@ -44,6 +44,8 @@ SnowLuma官方发布页：<https://github.com/SnowLuma/SnowLuma/releases/latest>
 
 ## 先选说话方案，不捆绑唱歌
 
+本机 Breeze TTS 2（第三方 C++/Vulkan）部署、原创音色与实验转换见 [Breeze](breeze-tts2-cpp.md)。讲话/RVC 切换、当前版本隐藏表单的原因以及真正的仅文字/仅语音/双发/自动模式见[独立控制页](voice-controls.md)；不要只让用户找不存在的旧按钮。
+
 先读 [电脑配置与语音方案选择](hardware-and-voice.md)。已有好用引擎默认沿用；本地角色语音是可选增强，不是 RVC 翻唱的前置。用户只想自然地读聊天消息且接受联网时，可优先建议较轻的 Edge；明确要离线或固定角色声音时再评估本地引擎。CosyVoice/GPT-SoVITS 的引擎能运行，不等于当前 Aurabot 已支持其接口，接适配器并测试后才算接通。用户不接受联网时不能自动改 Edge。
 
 本地部署失败或太慢：先解释原因并保留已工作配置，提供 Edge/用户已有兼容远端服务/暂用文字的选择；经用户选择才改说话引擎，不动 RVC 音色、歌曲库、点歌源。Edge 失败也不能默默退回 Windows 机械音后宣布自然 TTS 成功。唱歌失败不能靠切换 TTS 解决。

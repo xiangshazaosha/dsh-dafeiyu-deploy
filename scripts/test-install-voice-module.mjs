@@ -1,0 +1,20 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {mkdtempSync,mkdirSync,writeFileSync,readFileSync,existsSync} from 'node:fs';
+import {tmpdir} from 'node:os';
+import {join} from 'node:path';
+import {install} from './install-voice-module.mjs';
+test('preflight, install, no-clobber, backup and configuration preservation',()=>{
+ const root=mkdtempSync(join(tmpdir(),'dafeiyu-installer-test-')),plugin=join(root,'plugin'),data=join(root,'data');
+ mkdirSync(join(plugin,'src/core'),{recursive:true});mkdirSync(data);
+ writeFileSync(join(plugin,'src/core/modules.js'),'API_VERSION = 1; setConfig: route:');writeFileSync(join(plugin,'package.json'),JSON.stringify({version:'test-fixture'}));
+ const config='{"private":"keep-local"}';writeFileSync(join(data,'config.json'),config);
+ const args={pluginDir:plugin,dataDir:data,module:'voice-controls'};
+ assert.equal(install(args).apply,false);assert.equal(existsSync(join(data,'modules')),false);
+ assert.equal(install({...args,apply:true}).apply,true);
+ const target=join(data,'modules/voice-controls/index.mjs');writeFileSync(target,'// existing custom module');
+ assert.throws(()=>install({...args,apply:true}));
+ const backup=join(root,'backup');install({...args,apply:true,replace:true,backupDir:backup});
+ assert.equal(readFileSync(join(backup,'index.mjs'),'utf8'),'// existing custom module');assert.equal(readFileSync(join(data,'config.json'),'utf8'),config);
+ assert.throws(()=>install({...args,module:'unknown'}));
+});

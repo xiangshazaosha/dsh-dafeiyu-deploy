@@ -1,0 +1,45 @@
+{
+  "reviewedExampleDate": "2026-11-08",
+  "models": [
+    {
+      "id": "御姐-雷电将军",
+      "bytes": 57586706,
+      "sha256": "6d50ff95cb9a5e4c09f720ca92e068cb98ff26c6d3dc4a4a13942ee958af97b0",
+      "url": "https://github.com/Hanazar-Games/RVC-voice-models/releases/download/10Shogun/Reiden.Shogun.V5.pth",
+      "source": "https://github.com/Hanazar-Games/RVC-voice-models/releases/tag/10Shogun",
+      "usageNotice": "Publisher: Charlie Zhong; CC BY-NC 4.0, personal/educational/non-commercial, fan-made. Not official HoYoverse or voice-performer authorization. Recheck source and rights before use."
+    },
+    {
+      "id": "甜美-爱莉希雅",
+      "bytes": 55223738,
+      "sha256": "9dfce1eb78ea23dd4ef7774781e1ed53eefb7c4054695eab9f5e8a11798d27c0",
+      "url": "https://github.com/Hanazar-Games/RVC-voice-models/releases/download/1Elysia/ALXY_RVC.pth",
+      "source": "https://github.com/Hanazar-Games/RVC-voice-models/releases/tag/1Elysia",
+      "usageNotice": "Publisher: Charlie Zhong; CC BY-NC 4.0, personal/educational/non-commercial, fan-made. Not official HoYoverse or voice-performer authorization. Recheck source and rights before use."
+    },
+    {
+      "id": "二次元-胡桃",
+      "bytes": 55224197,
+      "sha256": "648606c63661e203ca60773675e14c8b96b364681a36facaa50bbfba11765fbc",
+      "url": "https://github.com/Hanazar-Games/RVC-voice-models/releases/download/6Hutao/Hutao_RVC.pth",
+      "source": "https://github.com/Hanazar-Games/RVC-voice-models/releases/tag/6Hutao",
+      "usageNotice": "Publisher: Charlie Zhong; CC BY-NC 4.0, personal/educational/non-commercial, fan-made. Not official HoYoverse or voice-performer authorization. Recheck source and rights before use."
+    },
+    {
+      "id": "角色-神里绫华",
+      "bytes": 55224197,
+      "sha256": "c9c58adf4ffd669075986d3716b58f9247a106432d65cbaebf1b473fb845c71c",
+      "url": "https://github.com/Hanazar-Games/RVC-voice-models/releases/download/4Ayaka/Ayaka_RVC.pth",
+      "source": "https://github.com/Hanazar-Games/RVC-voice-models/releases/tag/4Ayaka",
+      "usageNotice": "Publisher: Charlie Zhong; CC BY-NC 4.0, personal/educational/non-commercial, fan-made. Not official HoYoverse or voice-performer authorization. Recheck source and rights before use."
+    },
+    {
+      "id": "温柔-流萤",
+      "bytes": 55225115,
+      "sha256": "c3dea1545405a5c893105ca040212eb77ff2a392a17f4353933e5e806180963d",
+      "url": "https://github.com/Hanazar-Games/RVC-voice-models/releases/download/7Firefly/Liuying_RVC.pth",
+      "source": "https://github.com/Hanazar-Games/RVC-voice-models/releases/tag/7Firefly",
+      "usageNotice": "Publisher: Charlie Zhong; CC BY-NC 4.0, personal/educational/non-commercial, fan-made. Not official HoYoverse or voice-performer authorization. Recheck source and rights before use."
+    }
+  ]
+}

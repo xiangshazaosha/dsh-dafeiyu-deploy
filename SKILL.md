@@ -15,8 +15,8 @@ description: 为已安装 DeepSeek Harness 的用户按需部署、补齐或修�
 |---|---|---|
 | 1 | 大肥鱼桌宠：显示与动画 | [安装与存储](references/setup-and-storage.md) |
 | 2 | QQ 聊天：接入已有网关或补齐接入 | [QQ 与语音](references/qq-and-voice.md) |
-| 3 | 说话语音：TTS 发语音，不是唱歌 | [QQ 与语音](references/qq-and-voice.md) |
-| 4 | RVC 翻唱：分离人声、换音色、混音 | [CPU 与 RVC](references/rvc-cpu.md) |
+| 3 | 说话语音：TTS 发语音，不是唱歌 | [QQ 与语音](references/qq-and-voice.md)；选 Breeze 时读 [本机 CPP 语音](references/breeze-tts2-cpp.md) |
+| 4 | RVC 翻唱：分离人声、换音色、混音 | [CPU 与 RVC](references/rvc-cpu.md)；只加音色读 [追加模型](references/rvc-extra-voices.md) |
 | 5 | 歌曲来源：网易云点歌，或用自己的音频 | [CPU 与 RVC](references/rvc-cpu.md)的歌曲入口章节 |
 | 6 | 成品库优先、清唱与“上一首改成清唱”接续 | [成品优先扩展](references/song-library.md)、[清唱与接续](references/acappella.md) |
 | 7 | B站：先只读浏览，互动另选 | [社交模块](references/social.md)的B站部分 |
@@ -24,6 +24,8 @@ description: 为已安装 DeepSeek Harness 的用户按需部署、补齐或修�
 | 0 | 只检查 / 不确定，从目标帮我判断 | [选择与预检](references/selection-and-preflight.md) |
 
 这些是稳定的功能编号，不是必须按顺序执行的安装步骤。用户主动要求“整套”才规划全套；账号登录、外发、费用和许可仍分别处理。目录迁移、升级和故障诊断也可单独请求，不绑定全套安装。
+
+用户要求“找不到音色按钮”“讲话/RVC如何切换”或“仅文字/仅语音/混合回复”，读[可见音色与回复控制](references/voice-controls.md)，复用或安装独立控制页，不把 schema 存在当界面可见，也不把语音概率 100% 当强制全语音。网关断线先按[既有网关修复](references/snowluma-setup-and-reuse.md#控制台在运行但消息网关断线)检查，别重装声音来修连接。
 
 选择网易云点歌或完整唱歌链且选择网易云作为歌曲来源时，自动准备并接入 Aurabot 的网易云功能；已有有效登录直接复用，否则自动展示扫码二维码，由用户本人扫码确认。扫码等待不阻塞其他独立部署；其他可执行项目全部完成后，再检查网易云登录状态，仍未登录则再次提醒并展示有效二维码（过期则重新生成一次），不要只列待办就结束。已登录或用户明确跳过时不再提醒。详见 [网易云点歌及账号](references/rvc-cpu.md#网易云点歌及账号)。这不等于必须安装网易云桌面播放器。
 
@@ -72,6 +74,10 @@ description: 为已安装 DeepSeek Harness 的用户按需部署、补齐或修�
 - `scripts/patch-aurabot-attach.py` 与 `scripts/test-qq-attach-guard.mjs`：QQ 接入前检查/测试管理侧防护，仅适配精确版本及源码哈希；按[加载故障与自动防护](references/snowluma-setup-and-reuse.md)备份后应用。不修改 SnowLuma，不保证修复原生组件；不能把 HTTP 加载请求已接受称作实际接入成功。
 - `scripts/prepare-cpu.py`：从匹配的已安装 Aurabot 创建独立 CPU 安装器，先 `--check-only`；详见 RVC 参考。它不下载或安装 SnowLuma。
 - `scripts/netease-login.mjs`：本机网易云扫码辅助，Windows 自动打开二维码。用户本人扫码确认，助手只将成功登录信息提交给本机 Aurabot，不打印或打包凭据；详见 RVC 参考。
+- `assets/breeze-voice/`、`scripts/prepare-breeze-voices.mjs`：可配置路径的 Breeze C++ 语音适配与四款合成音色准备，不含运行时或音源；GPU兼容开关按证据选择，详见 [Breeze](references/breeze-tts2-cpp.md)。
+- `assets/voice-controls/`、`scripts/install-voice-module.mjs`：独立可见音色/回复方式面板，安装默认只检查，替换自定义代码需备份；详见[音色与回复控制](references/voice-controls.md)。
+- `scripts/fetch-verified.py`、`scripts/inspect-rvc.py`、`scripts/install-rvc-models.py`、`scripts/test-rvc-voices.mjs`：分块校验下载、安全检查推理权重、只加选中模型和短片段验收；候选是历史元数据，不自动安装，详见[追加音色](references/rvc-extra-voices.md)。
+- `scripts/repair-qq-gateway.ps1`：默认脱敏只读；用户要求修复后才 `-Repair`，已核对唯一机器人、已加载防护且无近期崩溃才单次接入与重连。不改自动接入/社交设置、不重置凭据；详见[网关断线](references/snowluma-setup-and-reuse.md#控制台在运行但消息网关断线)。
 - `assets/song-library/`：成品库优先扩展源文件；只在选择该功能且兼容性/权限检查通过后安装。不是原插件功能，不含任何用户歌曲、索引或模型；详见成品优先参考。
 
 遵从实际工具权限和用户的电脑操作约束；失败读错误并有限重试。无成功证据就报告待完成，不编造验收结果。

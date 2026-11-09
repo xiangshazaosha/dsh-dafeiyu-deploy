@@ -41,6 +41,8 @@ node '<ROOT>\Aurabot\sing-cpu\install-cpu.mjs'
 
 ## 音色模型不是运行环境
 
+已有环境只增加御姐/甜美/二次元/角色等音色，直接用[追加模型流程](rvc-extra-voices.md)：小权重、可选索引、来源/用途核对、weights_only 安全检查、默认不变、短片段验收。讲话音色与翻唱音色的可见入口见[音色与回复控制](voice-controls.md)，不是 `/音色` 一个命令同时切两套声音。
+
 RVC音色一般是`.pth`配可选`.index`或zip，不是整个数GB环境。免费可下载不代表所有用途获许可。尊重声音来源授权和发布者条款，不自动克隆真人、代签或声称开源代码许可覆盖角色音色。
 
 已使用过的候选：<https://huggingface.co/Esmerubphire/FeiyuVoice-RVC>，发布者称训练素材取得同意；NOTICE没有授予所有用途的通用许可，个人/公开发布/商用/再分发分别确认，不能称为无条件商用模型。

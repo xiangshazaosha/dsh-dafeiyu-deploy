@@ -16,3 +16,17 @@ __pycache__/
 .venv/
 node_modules/
 .DS_Store
+*.gguf
+*.safetensors
+*.breeze
+*.onnx
+*.bin
+*.dll
+*.exe
+*.7z
+*.ogg
+*.webm
+test-output/
+backups/
+**/breeze-runtime.json
+**/installation.json
