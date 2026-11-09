@@ -25,7 +25,25 @@ export const PRESETS = [
   { id: 'wanning', name: '晚宁', description: '柔和偏低女声', instruction: '一位成年女性，柔和略低的中低音，温暖细腻，放松从容，带一点轻微气息感但不耳语。标准普通话，自然聊天，语速平稳，不用朗诵腔。', seed: 2718 },
   { id: 'xingzhou', name: '星舟', description: '温润清朗男声', instruction: '一位年轻成年男性，温润清朗的中低音，干净沉稳而有亲和力，不沙哑，不压低嗓子。标准普通话，像朋友一样自然聊天，语速适中。', seed: 2026 },
 ];
-export function presetOf(value) { return PRESETS.find(p => p.id === value || p.name === value); }
+export function presetOf(value, presets=PRESETS) { return presets.find(p => p.id === value || p.name === value); }
+// Read per runtime and per request: sibling ESM imports may survive a host reload.
+export function loadPresets(root) {
+  const file=join(root,'voices','custom-presets.json');
+  if(!existsSync(file))return [...PRESETS];
+  const input=JSON.parse(readFileSync(file,'utf8'));
+  if(!Array.isArray(input)||input.length>64)throw Error('Breeze 自定义音色列表不合法。');
+  const ids=new Set(PRESETS.map(p=>p.id)),names=new Set(PRESETS.map(p=>p.name));
+  const custom=input.map(p=>{
+    if(!p||!/^[-a-z0-9_]{1,64}$/.test(p.id)||ids.has(p.id)||typeof p.name!=='string'||!p.name.trim()||p.name.length>64||names.has(p.name)||typeof p.description!=='string'||p.description.length>1000||typeof p.instruction!=='string'||p.instruction.length>2000||!Number.isInteger(p.seed)||p.seed<0||p.seed>0xffffffff||p.direction!==undefined&&(typeof p.direction!=='string'||p.direction.length>2000))throw Error('Breeze 自定义音色字段重复或不合法。');
+    const voice=join(root,'voices',p.id+'.breeze');
+    if(!existsSync(voice))throw Error('Breeze 自定义音色缺少文件：'+p.id);
+    const rel=relative(realpathSync(join(root,'voices')),realpathSync(voice));
+    if(rel.startsWith('..')||isAbsolute(rel)||!statSync(voice).isFile())throw Error('Breeze 音色文件越界或格式不合法。');
+    ids.add(p.id);names.add(p.name);
+    return {id:p.id,name:p.name,description:p.description,instruction:p.instruction,seed:p.seed,...(p.direction?{direction:p.direction}:{})};
+  });
+  return [...PRESETS,...custom];
+}
 export function validateText(value) {
   const text = String(value ?? '').trim();
   if (!text || text.length > 1200) throw new Error('语音文字需为 1–1200 字。');
@@ -102,14 +120,14 @@ export function createService({ runtime, log = {}, onDispose = () => {} } = {}) 
     return starting;
   }
   function synth(textValue, voiceValue, outputDir = join(ROOT, 'samples')) {
-    const text = validateText(textValue), preset = presetOf(voiceValue);
-    if (!preset) return Promise.reject(new Error('音色不存在，请选择晴岚、灵汐、晚宁或星舟。'));
+    const presets=loadPresets(ROOT),text = validateText(textValue), preset = presetOf(voiceValue,presets);
+    if (!preset) return Promise.reject(new Error('音色不存在，请选择：'+presets.map(p=>p.name).join('、')+'。'));
     const job = queue.then(async () => {
       await ensure();
       if (!existsSync(join(ROOT, 'voices', `${preset.id}.breeze`))) throw new Error(`音色 ${preset.name} 尚未建好，不会临时换成其他声音。`);
       const r = await fetch(`${BASE}/v1/audio/speech`, {
         method: 'POST', headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({ input: text, voice: preset.id, response_format: 'pcm', seed: preset.seed, cfg_scale: 1, split_chars: 120, max_new_tokens: 750 }),
+        body: JSON.stringify({ input: text, voice: preset.id, ...(preset.direction?{instructions:preset.direction}:{}), response_format: 'pcm', seed: preset.seed, cfg_scale: preset.direction?4:1, split_chars: 120, max_new_tokens: 750 }),
         signal: AbortSignal.timeout(180000),
       });
       if (!r.ok) throw new Error(`Breeze 合成失败（HTTP ${r.status}）。`);
@@ -124,7 +142,7 @@ export function createService({ runtime, log = {}, onDispose = () => {} } = {}) 
     return job;
   }
   function convert(source, voiceValue, {text='',keepMelody=0,outputDir=join(ROOT,'samples')}={}) {
-    const preset=presetOf(voiceValue);
+    const preset=presetOf(voiceValue,loadPresets(ROOT));
     if(!preset)return Promise.reject(new Error('音色不存在。'));
     if(!Number.isInteger(keepMelody)||keepMelody<0||keepMelody>2)return Promise.reject(new Error('保留旋律只能是 0、1 或 2。'));
     const job=queue.then(async()=>{

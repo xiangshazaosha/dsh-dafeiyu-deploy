@@ -1,0 +1,3 @@
+# Preserve preset and original-license bytes for the manifest's SHA256 checks.
+assets/breeze-presets/*.breeze binary
+assets/breeze-presets/BREEZEBLUE-LICENSE.txt -text

@@ -5,7 +5,7 @@ description: 为已安装 DeepSeek Harness 的用户按需部署、补齐或修�
 
 # DSH 大肥鱼部署助手
 
-这是供 DSH Agent 使用的执行指南，不是模型、QQ 网关或整合安装包。其他有文件和终端工具的 Agent 也能执行。已有 DSH 是前置条件，不自动重装宿主。
+这是供 DSH Agent 使用的执行指南，不是大模型、QQ 网关或整合安装包；另附十一款小型合成音色预设，按需导入。其他有文件和终端工具的 Agent 也能执行。已有 DSH 是前置条件，不自动重装宿主。
 
 ## 入口：按需选择，不默认整套安装
 
@@ -26,6 +26,8 @@ description: 为已安装 DeepSeek Harness 的用户按需部署、补齐或修�
 这些是稳定的功能编号，不是必须按顺序执行的安装步骤。用户主动要求“整套”才规划全套；账号登录、外发、费用和许可仍分别处理。目录迁移、升级和故障诊断也可单独请求，不绑定全套安装。
 
 用户要求“找不到音色按钮”“讲话/RVC如何切换”或“仅文字/仅语音/混合回复”，读[可见音色与回复控制](references/voice-controls.md)，复用或安装独立控制页，不把 schema 存在当界面可见，也不把语音概率 100% 当强制全语音。网关断线先按[既有网关修复](references/snowluma-setup-and-reuse.md#控制台在运行但消息网关断线)检查，别重装声音来修连接。
+
+用户要撒娇女友、御姐女王、懒羊羊风格近似、台湾女生巨甜普通话，或傲娇大小姐、迷糊女大学生、霸道女总裁、热血动漫少女、男高中生、男大学生、萝莉音时，读[固定音色包](references/breeze-saved-presets.md)。随包保存了十一款实际 `.breeze`，不是只有提示词；按选中项校验导入，保留当前讲话、RVC和回复方式。台湾女生这款是**讲普通话并带自然台湾腔**，不是台语，也不是抹去台湾腔的播音普通话；懒羊羊是**动画角色风格近似**，不是慵懒女声、官方原声或真人克隆。
 
 选择网易云点歌或完整唱歌链且选择网易云作为歌曲来源时，自动准备并接入 Aurabot 的网易云功能；已有有效登录直接复用，否则自动展示扫码二维码，由用户本人扫码确认。扫码等待不阻塞其他独立部署；其他可执行项目全部完成后，再检查网易云登录状态，仍未登录则再次提醒并展示有效二维码（过期则重新生成一次），不要只列待办就结束。已登录或用户明确跳过时不再提醒。详见 [网易云点歌及账号](references/rvc-cpu.md#网易云点歌及账号)。这不等于必须安装网易云桌面播放器。
 
@@ -74,7 +76,8 @@ description: 为已安装 DeepSeek Harness 的用户按需部署、补齐或修�
 - `scripts/patch-aurabot-attach.py` 与 `scripts/test-qq-attach-guard.mjs`：QQ 接入前检查/测试管理侧防护，仅适配精确版本及源码哈希；按[加载故障与自动防护](references/snowluma-setup-and-reuse.md)备份后应用。不修改 SnowLuma，不保证修复原生组件；不能把 HTTP 加载请求已接受称作实际接入成功。
 - `scripts/prepare-cpu.py`：从匹配的已安装 Aurabot 创建独立 CPU 安装器，先 `--check-only`；详见 RVC 参考。它不下载或安装 SnowLuma。
 - `scripts/netease-login.mjs`：本机网易云扫码辅助，Windows 自动打开二维码。用户本人扫码确认，助手只将成功登录信息提交给本机 Aurabot，不打印或打包凭据；详见 RVC 参考。
-- `assets/breeze-voice/`、`scripts/prepare-breeze-voices.mjs`：可配置路径的 Breeze C++ 语音适配与四款合成音色准备，不含运行时或音源；GPU兼容开关按证据选择，详见 [Breeze](references/breeze-tts2-cpp.md)。
+- `assets/breeze-voice/`、`scripts/prepare-breeze-voices.mjs`：可配置路径的 Breeze C++ 语音适配与原有四款合成音色准备，不含运行时或参考音频；GPU兼容开关按证据选择，详见 [Breeze](references/breeze-tts2-cpp.md)。
+- `assets/breeze-presets/`、`scripts/install-breeze-presets.mjs`：十一款已保存的小型合成音色、SHA256清单及独立非商用许可；默认只检查，按需导入，不覆盖已有不同文件，不改当前选择，详见[固定音色包](references/breeze-saved-presets.md)。
 - `assets/voice-controls/`、`scripts/install-voice-module.mjs`：独立可见音色/回复方式面板，安装默认只检查，替换自定义代码需备份；详见[音色与回复控制](references/voice-controls.md)。
 - `scripts/fetch-verified.py`、`scripts/inspect-rvc.py`、`scripts/install-rvc-models.py`、`scripts/test-rvc-voices.mjs`：分块校验下载、安全检查推理权重、只加选中模型和短片段验收；候选是历史元数据，不自动安装，详见[追加音色](references/rvc-extra-voices.md)。
 - `scripts/repair-qq-gateway.ps1`：默认脱敏只读；用户要求修复后才 `-Repair`，已核对唯一机器人、已加载防护且无近期崩溃才单次接入与重连。不改自动接入/社交设置、不重置凭据；详见[网关断线](references/snowluma-setup-and-reuse.md#控制台在运行但消息网关断线)。

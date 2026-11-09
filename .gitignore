@@ -19,6 +19,18 @@ node_modules/
 *.gguf
 *.safetensors
 *.breeze
+# Explicitly shared synthetic presets only; other local voices remain excluded.
+!assets/breeze-presets/jiaojiao.breeze
+!assets/breeze-presets/feiye.breeze
+!assets/breeze-presets/lanyangyang_style.breeze
+!assets/breeze-presets/taiwan_jutian.breeze
+!assets/breeze-presets/aojiao_daxiaojie.breeze
+!assets/breeze-presets/mihu_nvdaxuesheng.breeze
+!assets/breeze-presets/badao_nvzongcai.breeze
+!assets/breeze-presets/rexue_dongmanshaonv.breeze
+!assets/breeze-presets/nan_gaozhongsheng.breeze
+!assets/breeze-presets/nan_daxuesheng.breeze
+!assets/breeze-presets/luoli_keai.breeze
 *.onnx
 *.bin
 *.dll

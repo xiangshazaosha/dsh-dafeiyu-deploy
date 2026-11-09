@@ -1,0 +1,264 @@
+{
+  "schema": 1,
+  "packId": "dafeiyu-eleven-selected-20261110",
+  "createdOn": "2026-11-10",
+  "engineCompatibility": "HoppouAI/Breeze-TTS-2.cpp v0.1.6, BRZV version 2; revalidate other versions",
+  "modelSource": "https://huggingface.co/BreezeBlue/Breeze-TTS-2",
+  "engineSource": "https://github.com/HoppouAI/Breeze-TTS-2.cpp",
+  "source": "Locally synthesized voice design; no real-person reference recording; fixed saved voice tokens, not RVC weights",
+  "usage": "Research and non-commercial use only; model terms apply; not covered by repository CC0",
+  "licenseFile": "BREEZEBLUE-LICENSE.txt",
+  "licenseSha256": "f158b88cd51473925e1ce8c39f4c7c9e419304ad71371896c4ff18fa1351dca2",
+  "voices": [
+    {
+      "preset": {
+        "id": "jiaojiao",
+        "name": "撒娇女友",
+        "description": "超级撒娇、软糯黏人的成年女友声",
+        "seed": 7213,
+        "instruction": "一位二十五岁左右的成年女性，用非常亲昵、爱撒娇的女友语气和伴侣说话。声音甜软细腻、软糯轻盈，明显的撒娇韵律与轻微鼻腔共鸣，句尾拉长一点，音调富有起伏，有期待和依恋的笑意。标准中文，不模仿儿童、不尖叫、不夸张卡通化，不用播音腔。轻轻央求对方多陪自己一会儿。",
+        "direction": "一位二十五岁左右的成年女性，用非常亲昵、爱撒娇的女友语气和伴侣说话。声音甜软细腻、软糯轻盈，明显的撒娇韵律与轻微鼻腔共鸣，句尾拉长一点，音调富有起伏，有期待和依恋的笑意。标准中文，不模仿儿童、不尖叫、不夸张卡通化，不用播音腔。轻轻央求对方多陪自己一会儿。"
+      },
+      "file": "jiaojiao.breeze",
+      "size": 7080,
+      "sha256": "ed062e118f8566d841bb3e1d706f7c13340aca6aba136c03c5de7ea42079e17a",
+      "synthetic": true,
+      "officialPreset": false,
+      "humanAuditionVerified": false,
+      "characterApproximation": false
+    },
+    {
+      "preset": {
+        "id": "feiye",
+        "name": "御姐女王",
+        "description": "成熟低磁、从容有气场的女王声",
+        "seed": 8803,
+        "instruction": "一位三十岁左右的成年女性，成熟有魅力的御姐女王声。女中低音，音色饱满、略带磁性但不沙哑。语气从容坚定、自信有掌控感，吐字干净，节奏沉着，句尾下落，带一点克制的关照。不撒娇、不装嫩，不变成男人，不要新闻播音腔，也不要喊叫。像强大可靠的女王，低声对熟悉的人说话。",
+        "direction": "一位三十岁左右的成年女性，成熟有魅力的御姐女王声。女中低音，音色饱满、略带磁性但不沙哑。语气从容坚定、自信有掌控感，吐字干净，节奏沉着，句尾下落，带一点克制的关照。不撒娇、不装嫩，不变成男人，不要新闻播音腔，也不要喊叫。像强大可靠的女王，低声对熟悉的人说话。"
+      },
+      "file": "feiye.breeze",
+      "size": 5992,
+      "sha256": "08eb1f1d7d1284235af66520b5ed7ca880c036127de1d2ad7a1b0df322773408",
+      "synthetic": true,
+      "officialPreset": false,
+      "humanAuditionVerified": false,
+      "characterApproximation": false
+    },
+    {
+      "preset": {
+        "id": "lanyangyang_style",
+        "name": "懒羊羊风格（近似）",
+        "description": "圆润偏高、鼻音软糯、贪吃撒娇的卡通角色近似声，非动画原声",
+        "seed": 36071,
+        "instruction": "中文动画卡通角色的声音，参考懒羊羊的说话风格但不声称是原声：中高音，圆润软糯、略带鼻腔共鸣，声音有含着糖般的黏糯感，吐字稍微黏连但清楚，天真憨憨，爱吃又有点小委屈，语调起伏明显，偶尔轻轻撒娇抱怨，尾音可爱地拖一点点。说自然普通话。不是成年女性的慵懒气声，不是低沉御姐，不是女友暧昧语气，不要耳语，不要尖叫，不要机械朗读。",
+        "direction": "中文动画卡通角色的声音，参考懒羊羊的说话风格但不声称是原声：中高音，圆润软糯、略带鼻腔共鸣，声音有含着糖般的黏糯感，吐字稍微黏连但清楚，天真憨憨，爱吃又有点小委屈，语调起伏明显，偶尔轻轻撒娇抱怨，尾音可爱地拖一点点。说自然普通话。不是成年女性的慵懒气声，不是低沉御姐，不是女友暧昧语气，不要耳语，不要尖叫，不要机械朗读。"
+      },
+      "file": "lanyangyang_style.breeze",
+      "size": 8430,
+      "sha256": "0afcb64e2ecbf36dd7ed9449a7876be873b140f54a391ba862816c6f4d9a2780",
+      "synthetic": true,
+      "officialPreset": false,
+      "humanAuditionVerified": false,
+      "characterApproximation": true
+    },
+    {
+      "preset": {
+        "id": "taiwan_jutian",
+        "name": "台湾女生·巨甜普通话",
+        "description": "台湾女生讲普通话，保留自然台湾腔，巨甜软糯的成年女声",
+        "seed": 52129,
+        "instruction": "一位二十五岁的台湾成年女生讲普通话，也就是自然的台湾华语国语，不说台语，不说闽南语。保留台湾女生讲普通话的自然口音和韵律，卷舌轻一点，声音圆润轻柔，语尾微微上扬，语气非常亲近。音色巨甜、非常甜美软糯、清亮细腻，像甜美女友开心地陪喜欢的人聊天，带着明显甜甜的笑意，轻轻撒娇，柔软带一点自然鼻音，声音有自然的高低起伏。是成年女生，不模仿小孩，不尖嗓，不夸张做作，不要播音腔，不要刻意抹掉台湾普通话口音，咬字清楚。",
+        "direction": "一位二十五岁的台湾成年女生讲普通话，也就是自然的台湾华语国语，不说台语，不说闽南语。保留台湾女生讲普通话的自然口音和韵律，卷舌轻一点，声音圆润轻柔，语尾微微上扬，语气非常亲近。音色巨甜、非常甜美软糯、清亮细腻，像甜美女友开心地陪喜欢的人聊天，带着明显甜甜的笑意，轻轻撒娇，柔软带一点自然鼻音，声音有自然的高低起伏。是成年女生，不模仿小孩，不尖嗓，不夸张做作，不要播音腔，不要刻意抹掉台湾普通话口音，咬字清楚。"
+      },
+      "file": "taiwan_jutian.breeze",
+      "size": 6264,
+      "sha256": "a49e0ca5c1bc4002f333d6268341a03270e97bef55115fe484577ad5cc7431d0",
+      "synthetic": true,
+      "officialPreset": false,
+      "humanAuditionVerified": false,
+      "characterApproximation": false
+    },
+    {
+      "preset": {
+        "id": "aojiao_daxiaojie",
+        "name": "傲娇大小姐",
+        "description": "成年女声，清亮骄傲、嘴硬心软，后半句悄悄放柔",
+        "seed": 61101,
+        "instruction": "二十二岁左右的成年女性，中文动漫傲娇大小姐的说话风格。女中高音，清亮细腻，有一点骄傲和小别扭。开头嘴硬、轻轻抬着语调，节奏稍快，像故作不在乎；关心对方时尾音会悄悄放软，带一点害羞和温柔，嘴硬心软。说清楚自然的普通话，情绪起伏鲜活，不要真的愤怒，不尖叫，不训斥，不用播音腔，不模仿儿童。",
+        "direction": "二十二岁左右的成年女性，中文动漫傲娇大小姐的说话风格。女中高音，清亮细腻，有一点骄傲和小别扭。开头嘴硬、轻轻抬着语调，节奏稍快，像故作不在乎；关心对方时尾音会悄悄放软，带一点害羞和温柔，嘴硬心软。说清楚自然的普通话，情绪起伏鲜活，不要真的愤怒，不尖叫，不训斥，不用播音腔，不模仿儿童。"
+      },
+      "file": "aojiao_daxiaojie.breeze",
+      "size": 7429,
+      "sha256": "f4a569b086464dd6afe0c830cba422ab7624f59d91d5924e066e9e77577bd137",
+      "synthetic": true,
+      "officialPreset": false,
+      "humanAuditionVerified": false,
+      "characterApproximation": false,
+      "referenceText": "哼，我才不是特意等你的呢。只是刚好有空啦。你今天是不是很累？那就坐过来休息一下嘛。",
+      "verificationText": "才没有担心你呢。好了，先把水喝了，今天的事慢慢说给我听吧。",
+      "verification": {
+        "engine": "local Breeze CPP v0.1.6 Vulkan",
+        "savedVoiceFreshText": true,
+        "seconds": 5.36,
+        "peak": 0.56396484375,
+        "rms": 0.055105463401539614
+      }
+    },
+    {
+      "preset": {
+        "id": "mihu_nvdaxuesheng",
+        "name": "迷糊女大学生",
+        "description": "成年女大学生，困得迷迷糊糊，柔软轻鼻音、慢半拍",
+        "seed": 61102,
+        "instruction": "二十一岁的成年女大学生，午休刚醒、困得迷迷糊糊的说话声音。柔软自然的女中音，略带鼻音，声音圆润轻轻的，语速稍慢，反应像慢半拍，停顿短而自然，句尾松松地落下来，有一点迷糊的笑意。说自然普通话，困倦但每个词仍要说完整清楚。不是病态沙哑，不用耳语气声，不刻意撒娇，不呻吟，不用播音腔，不要夸张拉长每个字。",
+        "direction": "二十一岁的成年女大学生，午休刚醒、困得迷迷糊糊的说话声音。柔软自然的女中音，略带鼻音，声音圆润轻轻的，语速稍慢，反应像慢半拍，停顿短而自然，句尾松松地落下来，有一点迷糊的笑意。说自然普通话，困倦但每个词仍要说完整清楚。不是病态沙哑，不用耳语气声，不刻意撒娇，不呻吟，不用播音腔，不要夸张拉长每个字。"
+      },
+      "file": "mihu_nvdaxuesheng.breeze",
+      "size": 8773,
+      "sha256": "4360f0d6ff542abe1497ae3d608ea2493739d3ada99b071dd12c22aaaacda115",
+      "synthetic": true,
+      "officialPreset": false,
+      "humanAuditionVerified": false,
+      "characterApproximation": false,
+      "referenceText": "嗯？你刚刚说什么来着？我好像还没睡醒呢。先让我喝口水，再陪你慢慢聊，好不好？",
+      "verificationText": "啊，原来已经这个时间啦。我还有一点困，你先说，我在认真听呢。",
+      "verification": {
+        "engine": "local Breeze CPP v0.1.6 Vulkan",
+        "savedVoiceFreshText": true,
+        "seconds": 7.92,
+        "peak": 0.30792236328125,
+        "rms": 0.06204660173197221
+      }
+    },
+    {
+      "preset": {
+        "id": "badao_nvzongcai",
+        "name": "霸道女总裁",
+        "description": "成熟职场女声，低磁干练、冷静果断，有掌控感",
+        "seed": 61103,
+        "instruction": "三十二岁左右的成年女性，成熟干练的霸道女总裁声音。饱满有磁性的女中低音，普通话咬字清楚利落，节奏沉稳，短句干脆，语气冷静果断、胸有成竹，句尾坚定下落，有不必提高音量就能让人认真听的掌控感。对熟悉的人带克制的关心。保留清晰女性音色，不压成男声，不撒娇，不凶狠喊叫，不用新闻播音或夸张戏腔。",
+        "direction": "三十二岁左右的成年女性，成熟干练的霸道女总裁声音。饱满有磁性的女中低音，普通话咬字清楚利落，节奏沉稳，短句干脆，语气冷静果断、胸有成竹，句尾坚定下落，有不必提高音量就能让人认真听的掌控感。对熟悉的人带克制的关心。保留清晰女性音色，不压成男声，不撒娇，不凶狠喊叫，不用新闻播音或夸张戏腔。"
+      },
+      "file": "badao_nvzongcai.breeze",
+      "size": 6597,
+      "sha256": "8a679801ab736657b62ab00a51a5430b7f88f6e4a8390c215b64d40ea6fd589d",
+      "synthetic": true,
+      "officialPreset": false,
+      "humanAuditionVerified": false,
+      "characterApproximation": false,
+      "referenceText": "先坐下，把情况说清楚。需要解决的问题，我们一件一件来。别急，有我在，这件事我来安排。",
+      "verificationText": "今天先到这里，剩下的交给我。你已经做得很好了，现在去好好休息。",
+      "verification": {
+        "engine": "local Breeze CPP v0.1.6 Vulkan",
+        "savedVoiceFreshText": true,
+        "seconds": 6,
+        "peak": 0.65643310546875,
+        "rms": 0.10350836451158947
+      }
+    },
+    {
+      "preset": {
+        "id": "rexue_dongmanshaonv",
+        "name": "热血动漫少女",
+        "description": "成年动漫女声，清亮元气、热血坚定，朝气十足",
+        "seed": 61104,
+        "instruction": "十八岁以上的成年女性配音演员，演绎热血动漫中的青春女主角。明亮清澈的女中高音，充满元气、勇气和向前冲的劲头。说普通话，节奏轻快有力，重音鲜明，音调自然跃动，鼓励人的句子坚定又充满笑意。热血但不破音、不持续喊叫、不刺耳，不尖嗓，不用新闻播音腔，不要儿童奶音，字词说完整清楚。",
+        "direction": "十八岁以上的成年女性配音演员，演绎热血动漫中的青春女主角。明亮清澈的女中高音，充满元气、勇气和向前冲的劲头。说普通话，节奏轻快有力，重音鲜明，音调自然跃动，鼓励人的句子坚定又充满笑意。热血但不破音、不持续喊叫、不刺耳，不尖嗓，不用新闻播音腔，不要儿童奶音，字词说完整清楚。"
+      },
+      "file": "rexue_dongmanshaonv.breeze",
+      "size": 7124,
+      "sha256": "a4e04d6fbffb405c08d9cc08658a9027cb60ac28e45c248469d54cf18fbdded1",
+      "synthetic": true,
+      "officialPreset": false,
+      "humanAuditionVerified": false,
+      "characterApproximation": false,
+      "referenceText": "别放弃呀！还没有到最后呢。只要我们一起努力，就一定能找到办法。准备好了的话，现在就出发吧！",
+      "verificationText": "今天也要打起精神来！就算慢一点也没关系，我们一起把这件事做好！",
+      "verification": {
+        "engine": "local Breeze CPP v0.1.6 Vulkan",
+        "savedVoiceFreshText": true,
+        "seconds": 7.04,
+        "peak": 0.5130615234375,
+        "rms": 0.08216366544571095
+      }
+    },
+    {
+      "preset": {
+        "id": "nan_gaozhongsheng",
+        "name": "男高中生",
+        "description": "虚构校园少年男声，清朗青涩、轻快真诚",
+        "seed": 61105,
+        "instruction": "虚构校园动漫里的男高中生说话声音，由成年男性配音演绎。清朗干净、略带青涩的少年男声，音域中高，声音轻盈但保持自然男声共鸣，没有成熟男性的厚重低音。说自然普通话，节奏轻快，坦率真诚，有一点活泼和不太老练的小紧张，像课间和同学聊学习与球赛。不要沙哑烟嗓，不压低声音，不用播音腔，不尖叫，不变成女性声音。",
+        "direction": "虚构校园动漫里的男高中生说话声音，由成年男性配音演绎。清朗干净、略带青涩的少年男声，音域中高，声音轻盈但保持自然男声共鸣，没有成熟男性的厚重低音。说自然普通话，节奏轻快，坦率真诚，有一点活泼和不太老练的小紧张，像课间和同学聊学习与球赛。不要沙哑烟嗓，不压低声音，不用播音腔，不尖叫，不变成女性声音。"
+      },
+      "file": "nan_gaozhongsheng.breeze",
+      "size": 6372,
+      "sha256": "4bbe88d7d69fb968ba2042f3a85a2a0a0c5485a2e86476782c12752739f64c59",
+      "synthetic": true,
+      "officialPreset": false,
+      "humanAuditionVerified": false,
+      "characterApproximation": false,
+      "referenceText": "这道题我刚刚想明白了，要不要一起看看？等写完作业，我们再去操场走一圈吧！",
+      "verificationText": "今天的练习还挺难的，不过没关系，我们一起试试，说不定很快就想通了。",
+      "verification": {
+        "engine": "local Breeze CPP v0.1.6 Vulkan",
+        "savedVoiceFreshText": true,
+        "seconds": 5.36,
+        "peak": 0.614349365234375,
+        "rms": 0.08664166721005136
+      }
+    },
+    {
+      "preset": {
+        "id": "nan_daxuesheng",
+        "name": "男大学生",
+        "description": "成年大学生男声，阳光清朗、松弛温暖，自然有笑意",
+        "seed": 61106,
+        "instruction": "二十一岁左右的成年男大学生，阳光清朗、干净温暖的年轻男声。男中音偏清亮，比校园少年更稳定放松，声音不厚重、不沙哑，有自然的胸腔共鸣和轻轻的笑意。说标准自然的普通话，像和熟悉的朋友在校园里边走边聊，节奏舒展、语速适中、真诚随和。不要霸总低音，不刻意装嫩，不用播音腔，不夸张卖萌。",
+        "direction": "二十一岁左右的成年男大学生，阳光清朗、干净温暖的年轻男声。男中音偏清亮，比校园少年更稳定放松，声音不厚重、不沙哑，有自然的胸腔共鸣和轻轻的笑意。说标准自然的普通话，像和熟悉的朋友在校园里边走边聊，节奏舒展、语速适中、真诚随和。不要霸总低音，不刻意装嫩，不用播音腔，不夸张卖萌。"
+      },
+      "file": "nan_daxuesheng.breeze",
+      "size": 5241,
+      "sha256": "a2a5a533ffce69b3972810bc3e02d25079aaf73dc52bc4458430779a0f251ce5",
+      "synthetic": true,
+      "officialPreset": false,
+      "humanAuditionVerified": false,
+      "characterApproximation": false,
+      "referenceText": "忙完了吗？要不要一起出去走走？今天天气挺好的，路上慢慢聊，你说的事我都听着。",
+      "verificationText": "别给自己太大压力，先把眼前这一件事做好。休息一会儿，我陪你聊聊。",
+      "verification": {
+        "engine": "local Breeze CPP v0.1.6 Vulkan",
+        "savedVoiceFreshText": true,
+        "seconds": 5.12,
+        "peak": 0.594635009765625,
+        "rms": 0.09183723126991707
+      }
+    },
+    {
+      "preset": {
+        "id": "luoli_keai",
+        "name": "萝莉音",
+        "description": "成年女性配音的可爱高音风格，清脆轻盈、俏皮软甜",
+        "seed": 61107,
+        "instruction": "二十二岁成年女性配音演员的动漫可爱高音风格，保留成年女性配音质感，不模仿真实儿童。音色清脆轻盈、软甜圆润，音域偏高但不尖锐，带一点自然鼻音和俏皮笑意。说清楚自然的普通话，语调轻快活泼，尾音可爱地扬起来，像开心地介绍今天的小发现。不是耳语，不呻吟，不用暧昧或性感语气，不尖叫、不破音、不机械朗读。",
+        "direction": "二十二岁成年女性配音演员的动漫可爱高音风格，保留成年女性配音质感，不模仿真实儿童。音色清脆轻盈、软甜圆润，音域偏高但不尖锐，带一点自然鼻音和俏皮笑意。说清楚自然的普通话，语调轻快活泼，尾音可爱地扬起来，像开心地介绍今天的小发现。不是耳语，不呻吟，不用暧昧或性感语气，不尖叫、不破音、不机械朗读。"
+      },
+      "file": "luoli_keai.breeze",
+      "size": 6314,
+      "sha256": "381f5fc737389bfe2b2c9e257890f5134dc35be5ae230c0f052f2bc10e3499d9",
+      "synthetic": true,
+      "officialPreset": false,
+      "humanAuditionVerified": false,
+      "characterApproximation": false,
+      "referenceText": "你看你看，我今天发现了一件超有趣的事情！先别急着猜，听我慢慢告诉你呀。",
+      "verificationText": "今天的小任务完成啦！休息一下，再一起想想接下来玩点什么吧。",
+      "verification": {
+        "engine": "local Breeze CPP v0.1.6 Vulkan",
+        "savedVoiceFreshText": true,
+        "seconds": 6.32,
+        "peak": 0.36859130859375,
+        "rms": 0.0826347356287797
+      }
+    }
+  ]
+}

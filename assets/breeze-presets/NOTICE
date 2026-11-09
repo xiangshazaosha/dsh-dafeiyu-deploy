@@ -1,0 +1,18 @@
+Breeze TTS 2 is licensed under the BreezeBlue Research and Non-Commercial
+License Agreement. Copyright (c) 2026 RESONIA, INC. All Rights Reserved.
+
+Derived from Breeze TTS 2 by BreezeBlue and licensed for research and
+non-commercial use only.
+
+These eleven saved synthetic voice presets were designed locally using Breeze
+TTS 2 through HoppouAI/Breeze-TTS-2.cpp, then saved as BRZV version 2 files.
+No base model weights, runtime binaries, reference recordings, account data,
+or private configuration are included. Each .breeze file retains its original
+embedded text, description and synthesis provenance. See manifest.json for
+the exact voice definitions, sizes, SHA256 and source links.
+
+This preset pack is not covered by the repository's CC0 dedication. Its use
+remains subject to the accompanying unmodified BREEZEBLUE-LICENSE.txt.
+The cartoon-style preset is a synthetic approximation, not an official
+character voice or an actor's recording. No endorsement, commercial rights,
+or third-party character/performer rights are claimed or granted.
