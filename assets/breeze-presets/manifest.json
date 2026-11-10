@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "packId": "dafeiyu-nine-selected-20261110",
+  "packId": "dafeiyu-thirteen-selected-20261110",
   "createdOn": "2026-11-10",
   "engineCompatibility": "HoppouAI/Breeze-TTS-2.cpp v0.1.6, BRZV version 2; revalidate other versions",
   "modelSource": "https://huggingface.co/BreezeBlue/Breeze-TTS-2",
@@ -207,6 +207,94 @@
         "peak": 0.594635009765625,
         "rms": 0.09183723126991707
       }
+    },
+    {
+      "preset": {
+        "id": "aojiao_text_v2",
+        "name": "傲娇大小姐（文字V2）",
+        "description": "傲娇大小姐纯文字设计新版；不使用视频或外部参考声音，日常输出统一音量",
+        "seed": 76101,
+        "instruction": "年轻成年女性的傲娇大小姐声线。声音清亮、有一点鼻腔共鸣，音高偏中高，语气骄傲又有点害羞。前半句像故作不在乎，语调抬高、咬字有小脾气；关心别人时声音悄悄放软，嘴硬心软。普通话，台词感鲜活，发声结实清晰，不要耳语或喊叫。",
+        "direction": "年轻成年女性的傲娇大小姐声线。声音清亮、有一点鼻腔共鸣，音高偏中高，语气骄傲又有点害羞。前半句像故作不在乎，语调抬高、咬字有小脾气；关心别人时声音悄悄放软，嘴硬心软。普通话，台词感鲜活，发声结实清晰，不要耳语或喊叫。",
+        "normalizeOutput": true
+      },
+      "file": "aojiao_text_v2.breeze",
+      "size": 6023,
+      "sha256": "9d04d76dd0779d1f1146d89ddcea90d56d311cd44a837c559bfb9442266f3ef5",
+      "synthetic": true,
+      "officialPreset": false,
+      "characterApproximation": false,
+      "externalReferenceAudio": false,
+      "creationMethod": "text-only voice design",
+      "referenceText": "哼，本小姐才不稀罕呢！不过，你今天要是累了，就先坐下来休息一下吧。",
+      "previewLoudnessLUFS": -16.09,
+      "userApprovedForInstallation": true
+    },
+    {
+      "preset": {
+        "id": "sajiao_text_v2",
+        "name": "撒娇女友（文字V2）",
+        "description": "撒娇女友纯文字设计新版；不使用视频或外部参考声音，日常输出统一音量",
+        "seed": 76102,
+        "instruction": "二十四岁成年女性，甜度很高的撒娇女友声线。声音细腻明亮、软糯圆润，略带甜甜的鼻音，像笑着向喜欢的人轻轻央求。语调有明显高低起伏，尾音软软地延长，亲昵、黏人、带一点小委屈。普通话，气息稳定，字音清晰，不要耳语，不要儿童嗓或尖叫。",
+        "direction": "二十四岁成年女性，甜度很高的撒娇女友声线。声音细腻明亮、软糯圆润，略带甜甜的鼻音，像笑着向喜欢的人轻轻央求。语调有明显高低起伏，尾音软软地延长，亲昵、黏人、带一点小委屈。普通话，气息稳定，字音清晰，不要耳语，不要儿童嗓或尖叫。",
+        "normalizeOutput": true
+      },
+      "file": "sajiao_text_v2.breeze",
+      "size": 6322,
+      "sha256": "d9fb47b1e5742d1c1e130a272677ae85fcddb0e32c2433ba66cc5d16986999fe",
+      "synthetic": true,
+      "officialPreset": false,
+      "characterApproximation": false,
+      "externalReferenceAudio": false,
+      "creationMethod": "text-only voice design",
+      "referenceText": "人家想你了嘛。你终于回来啦，再陪我聊一会儿，好不好呀？",
+      "previewLoudnessLUFS": -16.0,
+      "userApprovedForInstallation": true
+    },
+    {
+      "preset": {
+        "id": "wenrou_text_v2",
+        "name": "温柔姐姐（文字V2）",
+        "description": "温柔姐姐纯文字设计新版；不使用视频或外部参考声音，日常输出统一音量",
+        "seed": 76103,
+        "instruction": "二十八岁成年女性的温柔姐姐声线。女中音，温暖柔润、细腻饱满，声音干净而有支撑，带一点安心的微笑。说话轻柔但听得清楚，节奏舒缓，像认真听朋友倾诉，也像温柔地讲故事。自然普通话，语尾平和，不用播音朗诵腔，不要气声耳语。",
+        "direction": "二十八岁成年女性的温柔姐姐声线。女中音，温暖柔润、细腻饱满，声音干净而有支撑，带一点安心的微笑。说话轻柔但听得清楚，节奏舒缓，像认真听朋友倾诉，也像温柔地讲故事。自然普通话，语尾平和，不用播音朗诵腔，不要气声耳语。",
+        "normalizeOutput": true
+      },
+      "file": "wenrou_text_v2.breeze",
+      "size": 6663,
+      "sha256": "0a9e208d06154570e6d6a39f42f4aa28cf89b8a2586edf8395d740f574b6f88a",
+      "synthetic": true,
+      "officialPreset": false,
+      "characterApproximation": false,
+      "externalReferenceAudio": false,
+      "creationMethod": "text-only voice design",
+      "referenceText": "很久很久以前，有人也和你一样，有一点迷茫。别着急，我陪你慢慢想办法。",
+      "previewLoudnessLUFS": -16.15,
+      "userApprovedForInstallation": true
+    },
+    {
+      "preset": {
+        "id": "taiwan_text_v2",
+        "name": "台湾腔甜妹（文字V2）",
+        "description": "台湾腔甜妹纯文字设计新版；不使用视频或外部参考声音，日常输出统一音量",
+        "seed": 76104,
+        "instruction": "二十三岁台湾成年女生讲普通话，也就是自然的台湾国语，不是台语。声线甜润清亮、轻盈柔软，带一点自然鼻音和笑意。保留台湾女生聊天的语调和咬字：卷舌轻、节奏轻快、语尾软软上扬，甜而亲近。发声清晰有支撑，不要播音腔，不要耳语，不要夸张尖嗓。",
+        "direction": "二十三岁台湾成年女生讲普通话，也就是自然的台湾国语，不是台语。声线甜润清亮、轻盈柔软，带一点自然鼻音和笑意。保留台湾女生聊天的语调和咬字：卷舌轻、节奏轻快、语尾软软上扬，甜而亲近。发声清晰有支撑，不要播音腔，不要耳语，不要夸张尖嗓。",
+        "normalizeOutput": true
+      },
+      "file": "taiwan_text_v2.breeze",
+      "size": 6605,
+      "sha256": "771cf68eddae66cbb40eafed1e5160b2eb0bc21bd27911aab6570fd1c36291ee",
+      "synthetic": true,
+      "officialPreset": false,
+      "characterApproximation": false,
+      "externalReferenceAudio": false,
+      "creationMethod": "text-only voice design",
+      "referenceText": "真的假的啦？你今天怎么这么可爱呀。先坐一下嘛，我陪你慢慢聊天，好不好？",
+      "previewLoudnessLUFS": -15.78,
+      "userApprovedForInstallation": true
     }
   ]
 }

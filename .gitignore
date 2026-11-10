@@ -29,6 +29,10 @@ node_modules/
 !assets/breeze-presets/badao_nvzongcai.breeze
 !assets/breeze-presets/nan_gaozhongsheng.breeze
 !assets/breeze-presets/nan_daxuesheng.breeze
+!assets/breeze-presets/aojiao_text_v2.breeze
+!assets/breeze-presets/sajiao_text_v2.breeze
+!assets/breeze-presets/wenrou_text_v2.breeze
+!assets/breeze-presets/taiwan_text_v2.breeze
 *.onnx
 *.bin
 *.dll
@@ -40,3 +44,4 @@ test-output/
 backups/
 **/breeze-runtime.json
 **/installation.json
+**/audio-output.json

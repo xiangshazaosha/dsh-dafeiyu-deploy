@@ -19,7 +19,7 @@ export function install({pluginDir,dataDir,module,apply=false,replace=false,back
     readRuntime(cfg.ext?.voice?.breezeRoot);
   }
   const source=fileURLToPath(new URL('../assets/'+module+'/',import.meta.url));
-  const names=module==='breeze-voice'?['service.mjs','index.mjs']:['panel.js','index.mjs'];
+  const names=module==='breeze-voice'?['loudness.mjs','service.mjs','index.mjs']:['panel.js','index.mjs'];
   const target=join(data,'modules',id);
   if(existsSync(target)&&lstatSync(target).isSymbolicLink())throw Error('Refusing to replace a linked module directory');
   const changed=names.filter(n=>!existsSync(join(target,n))||!readFileSync(join(target,n)).equals(readFileSync(join(source,n))));

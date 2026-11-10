@@ -1,8 +1,8 @@
 import { readFileSync } from 'node:fs';
-import { createService, PRESETS, presetOf, readRuntime, loadPresets } from './service.mjs?module=1.3.0';
+import { createService, PRESETS, presetOf, readRuntime, loadPresets } from './service.mjs?module=1.4.0';
 
 export default {
-  id: 'voice', name: '语音 · Breeze TTS 2', version: '1.3.0', api: 1, tab: 'voice',
+  id: 'voice', name: '语音 · Breeze TTS 2', version: '1.4.0', api: 1, tab: 'voice',
   description: '本机 AMD/Vulkan 语音与可扩展合成音色；保留原有语音识别和翻唱功能。',
   defaults: { breezeEnabled: true, breezeVoice: 'qinglan', breezeRoot: '' },
   settings: [

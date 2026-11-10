@@ -6,7 +6,7 @@ import {createHash,randomUUID} from 'node:crypto';
 import {PRESETS,loadPresets} from '../assets/breeze-voice/service.mjs';
 const bundled=fileURLToPath(new URL('../assets/breeze-presets/',import.meta.url));
 const sha=b=>createHash('sha256').update(b).digest('hex');
-const same=(a,b)=>['id','name','description','instruction','direction','seed'].every(k=>a[k]===b[k]);
+const same=(a,b)=>['id','name','description','instruction','direction','seed','normalizeOutput'].every(k=>a[k]===b[k]);
 const inside=(root,path)=>{const r=relative(root,path);return !r.startsWith('..')&&!isAbsolute(r);};
 export function readPack(packDir=bundled){
   const pack=resolve(packDir),manifest=JSON.parse(readFileSync(join(pack,'manifest.json'),'utf8'));
@@ -18,6 +18,7 @@ export function readPack(packDir=bundled){
     const p=entry.preset;
     if(!p||!/^[-a-z0-9_]{1,64}$/.test(p.id)||ids.has(p.id)||names.has(p.name)||entry.file!==p.id+'.breeze'||entry.synthetic!==true||typeof p.name!=='string'||!p.name.trim()||p.name.length>64||typeof p.description!=='string'||typeof p.instruction!=='string'||typeof p.direction!=='string'||!Number.isInteger(p.seed)||p.seed<0||p.seed>0xffffffff)throw Error('Invalid or duplicate preset definition');
     ids.add(p.id);names.add(p.name);
+    if(p.normalizeOutput!==undefined&&typeof p.normalizeOutput!=='boolean')throw Error('Invalid normalization flag');
     const file=join(pack,entry.file);
     if(lstatSync(file).isSymbolicLink())throw Error('Linked bundle voice is not allowed');
     const bytes=readFileSync(file);
@@ -70,7 +71,8 @@ export function installPresets({root,voices,apply=false,nonCommercial=false,pack
       // No-clobber atomic publication; a concurrent file is never replaced.
       linkSync(temporary,join(dir,entry.file));unlinkSync(temporary);temporary=undefined;
     }
-    const notice=join(base,'licenses','dafeiyu-breeze-presets');mkdirSync(notice,{recursive:true});
+    // Keep earlier pack provenance intact when a new pack adds more presets.
+    const notice=join(base,'licenses','dafeiyu-breeze-presets',sha(readFileSync(join(packDir,'manifest.json'))).slice(0,16));mkdirSync(notice,{recursive:true});report.provenanceDirectory=notice;
     for(const name of ['BREEZEBLUE-LICENSE.txt','NOTICE','manifest.json']){
       const source=readFileSync(join(packDir,name)),target=join(notice,name);
       if(existsSync(target)){if(!readFileSync(target).equals(source))throw Error('Existing pack provenance differs; inspect before replacing');}

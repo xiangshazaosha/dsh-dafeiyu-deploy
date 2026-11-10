@@ -1,7 +1,8 @@
 import { spawn } from 'node:child_process';
-import { existsSync, mkdirSync, openSync, closeSync, writeFileSync, readFileSync, realpathSync, statSync } from 'node:fs';
+import { existsSync, mkdirSync, openSync, closeSync, writeFileSync, readFileSync, realpathSync, statSync, unlinkSync } from 'node:fs';
 import { join, relative, isAbsolute, resolve } from 'node:path';
 import { randomUUID } from 'node:crypto';
+import {normalizeSpeech} from './loudness.mjs';
 
 export function readRuntime(root) {
   if(!root||!isAbsolute(root))throw new Error('请先设置 Breeze 的实际安装目录。');
@@ -17,7 +18,8 @@ export function runtimeOptions(value) {
     if(r.startsWith('..')||isAbsolute(r))throw new Error('程序和模型须放在所选 Breeze 根目录内。');
     return p;
   };
-  return {...value,root,port,exe:file(value.exe),model:file(value.model),base:`http://127.0.0.1:${port}`,sourceRoots:Array.isArray(value.sourceRoots)?value.sourceRoots:[],disableCoopmat:value.disableCoopmat===true};
+  const ffmpeg=value.ffmpeg?(isAbsolute(value.ffmpeg)?resolve(value.ffmpeg):file(value.ffmpeg)):undefined;
+  return {...value,root,port,exe:file(value.exe),model:file(value.model),ffmpeg,base:`http://127.0.0.1:${port}`,sourceRoots:Array.isArray(value.sourceRoots)?value.sourceRoots:[],disableCoopmat:value.disableCoopmat===true};
 }
 export const PRESETS = [
   { id: 'qinglan', name: '晴岚', description: '温柔清透女声', instruction: '一位年轻成年女性，温柔清透的中音，声音自然干净，有亲切的微笑感。标准普通话，轻松自然地聊天，不刻意撒娇，不用播音腔。', seed: 42 },
@@ -39,8 +41,9 @@ export function loadPresets(root) {
     if(!existsSync(voice))throw Error('Breeze 自定义音色缺少文件：'+p.id);
     const rel=relative(realpathSync(join(root,'voices')),realpathSync(voice));
     if(rel.startsWith('..')||isAbsolute(rel)||!statSync(voice).isFile())throw Error('Breeze 音色文件越界或格式不合法。');
+    if(p.normalizeOutput!==undefined&&typeof p.normalizeOutput!=='boolean')throw Error('音量统一标记不合法。');
     ids.add(p.id);names.add(p.name);
-    return {id:p.id,name:p.name,description:p.description,instruction:p.instruction,seed:p.seed,...(p.direction?{direction:p.direction}:{})};
+    return {id:p.id,name:p.name,description:p.description,instruction:p.instruction,seed:p.seed,...(p.direction?{direction:p.direction}:{}),...(p.normalizeOutput?{normalizeOutput:true}:{})};
   });
   return [...PRESETS,...custom];
 }
@@ -135,7 +138,10 @@ export function createService({ runtime, log = {}, onDispose = () => {} } = {}) 
       const pcm = Buffer.from(await r.arrayBuffer());
       mkdirSync(outputDir, { recursive: true });
       const file = join(outputDir, `${preset.id}-${randomUUID()}.wav`);
-      writeFileSync(file, wavBuffer(pcm), { flag: 'wx' });
+      if(preset.normalizeOutput){
+        const raw=join(outputDir,'.raw-'+randomUUID()+'.wav');writeFileSync(raw,wavBuffer(pcm),{flag:'wx'});
+        try{await normalizeSpeech(raw,file,options.ffmpeg);}finally{unlinkSync(raw);}
+      }else writeFileSync(file, wavBuffer(pcm), { flag: 'wx' });
       return { file, engine: 'breeze-tts2-vulkan', voice: preset.id };
     });
     queue = job.catch(() => {});

@@ -25,7 +25,7 @@ Agent 负责下载与部署。`scripts/fetch-verified.py URL DEST SHA256 --size 
 
 ## 可复用扩展与配置
 
-`assets/breeze-voice/` 包含本技能原创适配代码。它复用已安装内置语音模块的 ASR/诊断，替换合成与试听；不随包带引擎、基础权重、参考音频或用户设置。另有按需的[九款固定音色包](breeze-saved-presets.md)，包含小型 `.breeze` 与独立模型许可，不在代码CC0授权范围。当前接口契约来自 Aurabot 1.1.24，其他版本先查 API/源码。
+`assets/breeze-voice/` 包含本技能原创适配代码。它复用已安装内置语音模块的 ASR/诊断，替换合成与试听；不随包带引擎、基础权重、参考音频或用户设置。另有按需的[十三款固定音色包](breeze-saved-presets.md)，包含小型 `.breeze` 与独立模型许可，不在代码CC0授权范围。当前接口契约来自 Aurabot 1.1.24，其他版本先查 API/源码。
 
 在选定 Breeze 根目录创建本机 `breeze-runtime.json`，字段：
 
@@ -35,6 +35,7 @@ Agent 负责下载与部署。`scripts/fetch-verified.py URL DEST SHA256 --size 
 | `model` | 根目录内已校验的 GGUF 文件路径 |
 | `port` | 核对空闲的本机端口，默认候选 18370，不是宿主 DSH 动态端口 |
 | `disableCoopmat` | 默认 false；只在上述故障复现且兼容验证后设 true |
+| `ffmpeg` | 选中四款文字V2时所需的已核对FFmpeg文件；允许显式绝对路径复用既有安装，相对路径须在根目录内。不从PATH猜程序，不自动下载 |
 | `sourceRoots` | 明确允许的歌曲库、歌曲缓存、试听目录绝对路径；实验换声会 realpath 检查，默认空列表拒绝读取 |
 
 运行时适配器默认从 `<root>/models` 作为声码器工作目录；先对照所选引擎布局，确保完整 tokenizer 在其要求的相对位置。所有路径从实际用户目录取得，不照抄开发者的 D 盘/用户名。
