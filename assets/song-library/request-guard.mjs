@@ -28,6 +28,7 @@ export function installRequestGuard(api, resolveSong, play) {
       const cfg = api.config();
       if (args.chatId !== `private:${cfg.ownerQQ}`) return original.call(song, args);
       if (!cfg.enabled || !cfg.song?.enabled) return { ok: false, message: '翻唱功能目前关闭，没有开始制作。' };
+      if(cfg.ext?.['breeze-cover']?.rvcArrangement==='acappella'&&!requestedArrangement(args.song)){const name=String(args.song||args.file?.split(/[\\/]/).pop()||'').trim();args={...args,song:name+' 清唱版'};}
       let result;
       try { result = decide(args); }
       catch (error) { api.log.warn('制作入口读取歌曲库失败：', error.message); return { ok: false, message: '歌曲库读取失败；为避免重复制作，这次没有联网或排队。' }; }

@@ -21,7 +21,7 @@ export function formatReplyItems(items, mode) {
   });
 }
 export default {
-  id: 'voice-controls', name: '音色切换', version: '1.1.0', api: 1,
+  id: 'voice-controls', name: '音色切换', version: '1.3.1', api: 1,
   description: '选择讲话和翻唱音色，以及仅文字、仅语音或文字加语音的回复方式。',
   panel: 'panel.js',
   setup(api) {
@@ -29,9 +29,10 @@ export default {
       const cfg = api.config();
       const speech = api.use('voice');
       const song = api.use('song');
+      const cover=api.use('breeze-cover')?.state?.();
       const voices = speech?.breezeVoices?.() || [];
       const rvc = song?.status?.()?.voices || [];
-      return { ok: true, reply: {selected:cfg.ext?.['voice-controls']?.replyMode||'auto',modes:REPLY_MODES,voiceEnabled:!!cfg.voice?.enabled}, speech: { selected: cfg.ext?.voice?.breezeVoice || 'qinglan', enabled: cfg.ext?.voice?.breezeEnabled !== false, voices }, rvc: { selected: cfg.song?.voice || '', voices: rvc } };
+      return { ok: true, reply: {selected:cfg.ext?.['voice-controls']?.replyMode||'auto',modes:REPLY_MODES,voiceEnabled:!!cfg.voice?.enabled}, speech: { selected: cfg.ext?.voice?.breezeVoice || 'qinglan', enabled: cfg.ext?.voice?.breezeEnabled !== false, voices }, rvc: { selected: cfg.song?.voice || '', voices: rvc, arrangement:cover?.rvcArrangement||cfg.ext?.['breeze-cover']?.rvcArrangement||'mixed' }, breezeCover:cover?{selectedVoice:cover.selectedVoice,voices:cover.voices,ready:cover.ready,arrangement:cover.breezeArrangement,keepMelody:cover.keepMelody}:null };
     };
     api.route('/state', state);
     api.route('/select', async req => {
@@ -48,8 +49,10 @@ export default {
         api.setConfig({ext:{voice:{breezeVoice:body.voice}}});
         return {ok:true,message:'讲话音色已保存，翻唱音色未改变。',...state()};
       }
+      if(body.kind==='breeze'){const cover=api.use('breeze-cover');if(!cover)return {ok:false,message:'Breeze翻唱模块未运行'};cover.selectSettings({voice:body.voice,breezeArrangement:body.arrangement,keepMelody:body.keepMelody});return {...state(),message:'Breeze翻唱音色和版本已保存，讲话及RVC设置不变。'};}
       if (body.kind === 'rvc') {
         if (!current.rvc.voices.some(v => v.id === body.voice)) return {ok:false,message:'请选择列表中的翻唱音色。'};
+        if(body.arrangement!==undefined){if(!['mixed','acappella'].includes(body.arrangement))return {ok:false,message:'请选择清唱或带伴奏'};const cover=api.use('breeze-cover');if(cover)cover.selectSettings({rvcArrangement:body.arrangement});else api.setConfig({ext:{'breeze-cover':{rvcArrangement:body.arrangement}}});}
         api.setConfig({song:{voice:body.voice}});
         return {ok:true,message:'翻唱音色已保存，讲话音色未改变。',...state()};
       }

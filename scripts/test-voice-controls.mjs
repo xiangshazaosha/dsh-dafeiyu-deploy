@@ -48,8 +48,8 @@ const src=readFileSync(new URL('../assets/voice-controls/panel.js',import.meta.u
 const Comp=new Function('React','h','ui','call',src)(React,h,ui,async()=>({ok:true}));
 const tree=Comp({toast:()=>{},reload:()=>{}});
 const flat=[];const walk=t=>{if(t&&typeof t==='object'){flat.push(t);(t.children||[]).flat(Infinity).forEach(walk)}};walk(tree);
-assert.equal(flat.filter(n=>n.type==='Select').length,3);
+assert.equal(flat.filter(n=>n.type==='Select').length,4);
 assert(flat.some(n=>n.type==='Btn'&&n.children.includes('保存讲话音色')));
 assert(flat.some(n=>n.type==='Btn'&&n.children.includes('保存翻唱音色')));
 assert(flat.some(n=>n.type==='Btn'&&n.children.includes('保存回复方式')));
-console.log('PASS: independent voice/mode saves, preserved fields, invalid-input rejection, reply hooks, long-content preservation, three rendered selectors and save buttons.');
+console.log('PASS: independent voice/mode saves, preserved fields, invalid-input rejection, reply hooks, long-content preservation, four rendered selectors and save buttons.');

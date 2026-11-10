@@ -1,12 +1,18 @@
 // Copy only selected, reviewed user-module source; never touch config or vendor code.
 import {readFileSync,existsSync,mkdirSync,copyFileSync,renameSync,lstatSync} from 'node:fs';
-import {join,resolve} from 'node:path';
+import {join,resolve,isAbsolute,basename,extname} from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {spawnSync} from 'node:child_process';
 import {readRuntime} from '../assets/breeze-voice/service.mjs';
 
 export function install({pluginDir,dataDir,module,apply=false,replace=false,backupDir}){
-  if(!['breeze-voice','voice-controls'].includes(module))throw Error('Select breeze-voice or voice-controls');
+  const files={
+    'breeze-voice':['loudness.mjs','service.mjs','index.mjs'],
+    'voice-controls':['panel.js','index.mjs'],
+    'breeze-cover':['separate.py','studio.mjs','panel.js','index.mjs'],
+    'song-library':['library.mjs','arrangement.mjs','acappella.mjs','request-guard.mjs','index.mjs'],
+  };
+  if(!Object.hasOwn(files,module))throw Error('Select breeze-voice, voice-controls, breeze-cover or song-library');
   const plugin=resolve(pluginDir),data=resolve(dataDir);
   const api=readFileSync(join(plugin,'src/core/modules.js'),'utf8');
   if(!api.includes('API_VERSION = 1')||!api.includes('setConfig:')||!api.includes('route:'))throw Error('Module API contract changed; review before installation');
@@ -18,16 +24,30 @@ export function install({pluginDir,dataDir,module,apply=false,replace=false,back
     const cfg=JSON.parse(readFileSync(join(data,'config.json'),'utf8'));
     readRuntime(cfg.ext?.voice?.breezeRoot);
   }
+  if(module==='breeze-cover'){
+    const cfg=JSON.parse(readFileSync(join(data,'config.json'),'utf8')),r=cfg.song?.root,m=cfg.song?.separatorModel;
+    if(!r||!isAbsolute(r)||!m||basename(m)!==m||extname(m)!=='.ckpt')throw Error('Existing song root and reviewed separator model must be configured first');
+    for(const f of [join(r,'bin','ffmpeg.exe'),join(r,'env','Scripts','python.exe'),join(r,'separator-models',m),join(r,'separator-models',m.replace(/\.[^.]+$/,'.yaml'))]){
+      if(!existsSync(f)||!lstatSync(f).isFile())throw Error('Existing separator environment is incomplete; prepare it separately before installing the cover module');
+    }
+    const studio=readFileSync(join(plugin,'src/song/studio.js'),'utf8');
+    for(const marker of ['convertSpeech','search','request'])if(!studio.includes(marker))throw Error('Song integration contract changed; review before installation');
+    for(const marker of ['tool:','rule:','onDispose:'])if(!api.includes(marker))throw Error('Cover module API contract changed; review before installation');
+  }
   const source=fileURLToPath(new URL('../assets/'+module+'/',import.meta.url));
-  const names=module==='breeze-voice'?['loudness.mjs','service.mjs','index.mjs']:['panel.js','index.mjs'];
+  const names=files[module];
   const target=join(data,'modules',id);
   if(existsSync(target)&&lstatSync(target).isSymbolicLink())throw Error('Refusing to replace a linked module directory');
+  for(const n of names){
+    if(existsSync(join(target,n))&&lstatSync(join(target,n)).isSymbolicLink())throw Error('Refusing to replace a linked module file');
+    if(existsSync(join(target,n+'.deploy-new')))throw Error('A pending deployment file exists; review it first');
+  }
   const changed=names.filter(n=>!existsSync(join(target,n))||!readFileSync(join(target,n)).equals(readFileSync(join(source,n))));
   const overwrites=changed.filter(n=>existsSync(join(target,n)));
   for(const n of names){
     const src=readFileSync(join(source,n),'utf8');
     if(n==='panel.js')new Function('React','h','ui','call',src);
-    else {const p=spawnSync(process.execPath,['--check',join(source,n)],{encoding:'utf8',windowsHide:true});if(p.status!==0)throw Error(p.stderr);}
+    else if(n.endsWith('.mjs')){const p=spawnSync(process.execPath,['--check',join(source,n)],{encoding:'utf8',windowsHide:true});if(p.status!==0)throw Error(p.stderr);}
   }
   if(apply&&overwrites.length&&(!replace||!backupDir))throw Error('Existing custom source differs; review, then supply --replace and a new --backup-dir');
   if(!apply)return {apply:false,id,pluginVersion:pkg.version,changed,overwrites,configurationChanged:false};

@@ -4,7 +4,7 @@ License Agreement. Copyright (c) 2026 RESONIA, INC. All Rights Reserved.
 Derived from Breeze TTS 2 by BreezeBlue and licensed for research and
 non-commercial use only.
 
-These twelve saved synthetic voice presets were designed locally using Breeze
+These eleven saved synthetic voice presets were designed locally using Breeze
 TTS 2 through HoppouAI/Breeze-TTS-2.cpp, then saved as BRZV version 2 files.
 No base model weights, runtime binaries, reference recordings, account data,
 or private configuration are included. Each .breeze file retains its original

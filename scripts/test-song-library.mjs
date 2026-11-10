@@ -37,7 +37,7 @@ function fakeApi(workspaceDir) {
   const api = {
     config: () => cfg, isOwner: id => id === cfg.ownerQQ,
     on: (name, fn) => { handlers[name] = fn; },
-    command: c => { command = c; }, route: () => {},
+    command: c => { command = c; }, route: (p,f) => { handlers['route:'+p]=f; },
     sendVoiceFile: async (...args) => { voices.push(args); },
     sendText: async (...args) => { texts.push(args); },
     use: () => song,
@@ -298,4 +298,19 @@ test('native clear request without a corresponding stem blocks mixed send rather
   f.api.lib = () => ({ dataDir: () => join(data.workspaceDir, 'absent') });
   const returned = await f.handlers.send([{ type: 'record', data: { file: 'base64://' + Buffer.alloc(2048, 87).toString('base64') } }], { note: '[翻唱] 新曲 - 歌手', chatId });
   assert.equal(returned, null); assert.match(f.texts[0][1], /停止发送/);
+}));
+
+
+test('saved RVC clear default reaches real request queue and explicit mixed overrides it',()=>fixture(data=>{
+ const f=fakeApi(data.workspaceDir);f.cfg.ext={'breeze-cover':{rvcArrangement:'acappella'}};const chatId=f.msg('').chatId;
+ const result=f.song.request({song:'测试新曲',chatId});assert.equal(result.ok,true);assert.equal(requestedArrangement(f.requests[0].song),'acappella');
+ f.song.request({song:'另一新曲 带伴奏',chatId});assert.equal(requestedArrangement(f.requests[1].song),'mixed');
+ f.cfg.dryRun=true;const dry=f.song.request({song:'第三新曲',chatId});assert.equal(dry.queued,false);assert.equal(f.requests.length,2);
+}));
+test('saved RVC clear default affects cached-library lookup, not only text labels',()=>fixture(async data=>{
+ data.entries[0].vocalFile='retained-vocal.wav';data.write();const f=fakeApi(data.workspaceDir);f.cfg.ext={'breeze-cover':{rvcArrangement:'acappella'}};f.api.core={http:{query:x=>x}};
+ assert.equal((await f.handlers['route:/match']({q:'测试曲目'})).kind,'needs-acappella');assert.equal((await f.handlers['route:/match']({q:'测试曲目 带伴奏'})).kind,'match');
+}));
+test('explicit Breeze request bypasses cached RVC interception',()=>fixture(async data=>{
+ const f=fakeApi(data.workspaceDir);assert.equal(await f.handlers.message(f.msg('用Breeze翻唱测试曲目')),false);assert.equal(f.voices.length,0);assert.equal(f.requests.length,0);
 }));

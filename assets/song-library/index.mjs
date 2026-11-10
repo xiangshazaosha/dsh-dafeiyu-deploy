@@ -7,7 +7,7 @@ import { createHash } from 'node:crypto';
 import { readFileSync } from 'node:fs';
 
 export default {
-  id: 'song-library', name: '翻唱成品优先', version: '1.2.0', api: 1,
+  id: 'song-library', name: '翻唱成品优先', version: '1.2.1', api: 1,
   description: '主人私聊点歌优先发送歌曲库中的既有翻唱；没有匹配时保留原有点歌流程。',
   setup(api) {
     const allowed = msg => msg?.kind === 'private' && api.isOwner(msg.userId) &&
@@ -16,6 +16,7 @@ export default {
     let nativeVocalLast = null;
     const resolveSong = (text, options = {}) => {
       const root = libraryRoot(api.config());
+      if(api.config().ext?.['breeze-cover']?.rvcArrangement==='acappella'&&!requestedArrangement(text))text=String(text||'')+' 清唱版';
       if (isArrangementFollowUp(text)) {
         const last = options.simulated ? simulatedLast : readLastSong(root);
         if (!last) return { kind: 'needs-title' };
@@ -45,6 +46,7 @@ export default {
       return '找到之前做好的版本，已经发给你啦。';
     };
     api.on('message', async msg => {
+      if (/breeze/i.test(String(msg?.text||'')))return false;
       if (!allowed(msg) || !api.config().song?.enabled || (!requestedArrangement(msg.text) && !/(唱|点歌|放歌|播放|放一|放给|再放|发.*(?:歌|语音)|再听|想听|要听|我说的是|听一听|听一下|听听|再来|来一遍|再发|发给我|发一遍|重播|回放)/.test(String(msg.text || '')))) return false;
       let result;
       try { result = resolveSong(msg.text, { simulated: Boolean(msg.raw?.simulated) }); } catch (error) {

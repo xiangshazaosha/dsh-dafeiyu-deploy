@@ -14,6 +14,8 @@
 
 ## Agent 安装/更新
 
+与[本机翻唱插件](breeze-cover.md)一起更新时，本包版本读取独立RVC清唱默认值，用户明确指定版本优先，仅主人私聊原生制作入口继承；明确写出Breeze的消息不被旧RVC缓存监听抢答。没有选择此适配就保持原行为，不为翻唱面板自动缩小群聊权限。安装器也支持 `--module song-library`，默认只检查且不写索引/配置。
+
 1. 从所选宿主的 `/modules` 和实际配置定位用户模块根、`workspaceDir`、版本及 `safeMode`，按字段读取，不打印全部响应。检查 `api.on('message'/'send')`、`api.command`、`api.sendVoiceFile`、`api.use('song').request` 的签名与拦截优先级，及 `onDispose`、`every`、`context`；核实模拟器的发送捕获边界。源码确认模型工具、路由持有的 song 对象与 `api.use('song')` 返回同一个对象；不是同一对象则当前保护无效，先适配。已有其他扩展包装 request 时先检查兼容性，不抢占。不同版本先适配，不强制关闭安全模式。
 2. 本机运行随包测试：`node --test scripts/test-song-library.mjs`；再用 `node --check` 检查两份源文件。测试不登录、不联网、不调用真实 QQ 或 RVC。
 3. 已有 `song-library` 时先检查是不是同一扩展。相同文件无需覆盖；不同先本机备份整个扩展，核对自定义行为再局部更新。冲突/不同作者同名时停止询问。复制 `index.mjs`、`library.mjs`、`request-guard.mjs`、`arrangement.mjs`、`acappella.mjs` 到 `<实际模块根>/song-library/`，不用覆盖核心 `src/song/studio.js`，也不替换已有库索引。入口最后替换，避免热加载读到缺依赖的半成品；有正在发送的清唱任务时先等待安全节点。

@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "packId": "dafeiyu-twelve-selected-20261110",
+  "packId": "dafeiyu-eleven-selected-20261110",
   "createdOn": "2026-11-10",
   "engineCompatibility": "HoppouAI/Breeze-TTS-2.cpp v0.1.6, BRZV version 2; revalidate other versions",
   "modelSource": "https://huggingface.co/BreezeBlue/Breeze-TTS-2",
@@ -43,23 +43,6 @@
       "officialPreset": false,
       "humanAuditionVerified": false,
       "characterApproximation": true
-    },
-    {
-      "preset": {
-        "id": "taiwan_jutian",
-        "name": "台湾女生·巨甜普通话",
-        "description": "台湾女生讲普通话，保留自然台湾腔，巨甜软糯的成年女声",
-        "seed": 52129,
-        "instruction": "一位二十五岁的台湾成年女生讲普通话，也就是自然的台湾华语国语，不说台语，不说闽南语。保留台湾女生讲普通话的自然口音和韵律，卷舌轻一点，声音圆润轻柔，语尾微微上扬，语气非常亲近。音色巨甜、非常甜美软糯、清亮细腻，像甜美女友开心地陪喜欢的人聊天，带着明显甜甜的笑意，轻轻撒娇，柔软带一点自然鼻音，声音有自然的高低起伏。是成年女生，不模仿小孩，不尖嗓，不夸张做作，不要播音腔，不要刻意抹掉台湾普通话口音，咬字清楚。",
-        "direction": "一位二十五岁的台湾成年女生讲普通话，也就是自然的台湾华语国语，不说台语，不说闽南语。保留台湾女生讲普通话的自然口音和韵律，卷舌轻一点，声音圆润轻柔，语尾微微上扬，语气非常亲近。音色巨甜、非常甜美软糯、清亮细腻，像甜美女友开心地陪喜欢的人聊天，带着明显甜甜的笑意，轻轻撒娇，柔软带一点自然鼻音，声音有自然的高低起伏。是成年女生，不模仿小孩，不尖嗓，不夸张做作，不要播音腔，不要刻意抹掉台湾普通话口音，咬字清楚。"
-      },
-      "file": "taiwan_jutian.breeze",
-      "size": 6264,
-      "sha256": "a49e0ca5c1bc4002f333d6268341a03270e97bef55115fe484577ad5cc7431d0",
-      "synthetic": true,
-      "officialPreset": false,
-      "humanAuditionVerified": false,
-      "characterApproximation": false
     },
     {
       "preset": {

@@ -22,7 +22,6 @@ node_modules/
 # Explicitly shared synthetic presets only; other local voices remain excluded.
 !assets/breeze-presets/feiye.breeze
 !assets/breeze-presets/lanyangyang_style.breeze
-!assets/breeze-presets/taiwan_jutian.breeze
 !assets/breeze-presets/aojiao_daxiaojie.breeze
 !assets/breeze-presets/mihu_nvdaxuesheng.breeze
 !assets/breeze-presets/badao_nvzongcai.breeze

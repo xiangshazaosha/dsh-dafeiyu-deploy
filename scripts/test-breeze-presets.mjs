@@ -10,15 +10,16 @@ import {loadPresets,createService} from '../assets/breeze-voice/service.mjs';
 import wrapper from '../assets/breeze-voice/index.mjs';
 const temp=()=>mkdtempSync(join(tmpdir(),'dafeiyu-fixed-presets-'));
 const config=JSON.stringify({private:'not-a-real-secret',speech:'keep',rvc:'keep',replyMode:'text'});
-test('twelve real saved presets have exact checksums and model attribution',()=>{
- const pack=readPack();assert.equal(pack.voices.length,12);
- assert.deepEqual(pack.voices.map(x=>x.preset.id),["feiye", "lanyangyang_style", "taiwan_jutian", "aojiao_daxiaojie", "mihu_nvdaxuesheng", "badao_nvzongcai", "aojiao_text_v2", "sajiao_text_v2", "wenrou_text_v2", "taiwan_text_v2", "nan_gaozhongsheng", "nan_daxuesheng"]);
+test('eleven real saved presets have exact checksums and model attribution',()=>{
+ const pack=readPack();assert.equal(pack.voices.length,11);
+ assert.deepEqual(pack.voices.map(x=>x.preset.id),["feiye", "lanyangyang_style", "aojiao_daxiaojie", "mihu_nvdaxuesheng", "badao_nvzongcai", "aojiao_text_v2", "sajiao_text_v2", "wenrou_text_v2", "taiwan_text_v2", "nan_gaozhongsheng", "nan_daxuesheng"]);
  assert.equal(pack.voices.find(x=>x.characterApproximation).preset.id,'lanyangyang_style');
  assert(pack.voices.every(x=>x.synthetic&&!x.officialPreset));
  assert(!pack.voices.some(x=>['rexue_dongmanshaonv','luoli_keai'].includes(x.preset.id)));
  assert.equal(pack.voices.filter(x=>x.preset.normalizeOutput).length,4);
  assert(pack.voices.filter(x=>x.preset.normalizeOutput).every(x=>x.externalReferenceAudio===false));
- assert(!pack.voices.some(x=>x.preset.id==='jiaojiao'));
+ assert(!pack.voices.some(x=>['jiaojiao','taiwan_jutian'].includes(x.preset.id)));
+ assert.deepEqual(pack.voices.filter(x=>x.preset.id.startsWith('taiwan_')).map(x=>x.preset.id),['taiwan_text_v2']);
  assert.deepEqual(pack.voices.slice(-2).map(x=>x.preset.id),['nan_gaozhongsheng','nan_daxuesheng']);
 });
 test('display ordering keeps the two campus male voices last after later imports',()=>{
@@ -76,7 +77,7 @@ test('bundle corruption, unrecognized IDs and traversal are rejected',()=>{
 });
 test('runtime lists are root-specific and update without busting sibling ESM caches',()=>{
  const first=temp(),second=temp();assert.equal(loadPresets(first).length,4);
- installPresets({root:first,voices:['taiwan_jutian'],apply:true,nonCommercial:true});
+ installPresets({root:first,voices:['taiwan_text_v2'],apply:true,nonCommercial:true});
  assert.equal(loadPresets(first).length,5);assert.equal(loadPresets(second).length,4);
  const file=join(first,'voices/custom-presets.json'),list=JSON.parse(readFileSync(file));list[0].name='My renamed Taiwan Mandarin';writeFileSync(file,JSON.stringify(list));
  assert.equal(loadPresets(first).at(-1).name,'My renamed Taiwan Mandarin');
@@ -87,8 +88,8 @@ test('wrapper dynamically lists/selects imported voices while preserving legacy 
  writeFileSync(join(root,'breeze-runtime.json'),JSON.stringify({exe:'runtime/server.exe',model:'models/model.gguf'}));
  const commands=new Map();const api={settings:()=>settings,saveSettings:p=>Object.assign(settings,p),log:{},onDispose:()=>{},lib:()=>({default:{setup:()=>({speak:async()=>({engine:'legacy'})})}}),route:()=>{},command:c=>commands.set(c.name,c),dataDir:()=>root};
  const module=wrapper.setup(api);assert.equal(module.breezeVoices().length,4);
- installPresets({root,voices:['taiwan_jutian'],apply:true,nonCommercial:true});assert.equal(module.breezeVoices().length,5);
- commands.get('音色').run('台湾女生·巨甜普通话');assert.equal(settings.breezeVoice,'taiwan_jutian');assert.equal((await module.speak('测试')).engine,'legacy');
+ installPresets({root,voices:['taiwan_text_v2'],apply:true,nonCommercial:true});assert.equal(module.breezeVoices().length,5);
+ commands.get('音色').run('台湾腔甜妹（文字V2）');assert.equal(settings.breezeVoice,'taiwan_text_v2');assert.equal((await module.speak('测试')).engine,'legacy');
 });
 test('real service request retains fixed voice plus direction; original presets keep cfg=1',async()=>{
  const root=temp();installPresets({root,apply:true,nonCommercial:true});writeFileSync(join(root,'voices/qinglan.breeze'),'test fixture');
@@ -99,8 +100,8 @@ test('real service request retains fixed voice plus direction; original presets 
  await new Promise(r=>server.listen(0,'127.0.0.1',r));let dispose;
  try{
   const service=createService({runtime:{root,port:server.address().port,exe:'server.exe',model:'model.gguf'},onDispose:fn=>dispose=fn});
-  await service.synth('台湾女生讲普通话，声音巨甜。','taiwan_jutian');await service.synth('保持原来的声音。','qinglan');
-  assert.equal(received[0].voice,'taiwan_jutian');assert.equal(received[0].cfg_scale,4);assert(received[0].instructions.includes('台湾'));
+  await service.synth('御姐女王从容地说话。','feiye');await service.synth('保持原来的声音。','qinglan');
+  assert.equal(received[0].voice,'feiye');assert.equal(received[0].cfg_scale,4);assert(received[0].instructions.includes('御姐'));
   assert.equal(received[1].cfg_scale,1);assert.equal(received[1].instructions,undefined);
  }finally{dispose?.();await new Promise(r=>server.close(r));}
 });
