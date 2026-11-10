@@ -20,7 +20,6 @@ node_modules/
 *.safetensors
 *.breeze
 # Explicitly shared synthetic presets only; other local voices remain excluded.
-!assets/breeze-presets/jiaojiao.breeze
 !assets/breeze-presets/feiye.breeze
 !assets/breeze-presets/lanyangyang_style.breeze
 !assets/breeze-presets/taiwan_jutian.breeze

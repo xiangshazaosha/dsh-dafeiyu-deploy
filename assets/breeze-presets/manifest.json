@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "packId": "dafeiyu-thirteen-selected-20261110",
+  "packId": "dafeiyu-twelve-selected-20261110",
   "createdOn": "2026-11-10",
   "engineCompatibility": "HoppouAI/Breeze-TTS-2.cpp v0.1.6, BRZV version 2; revalidate other versions",
   "modelSource": "https://huggingface.co/BreezeBlue/Breeze-TTS-2",
@@ -10,23 +10,6 @@
   "licenseFile": "BREEZEBLUE-LICENSE.txt",
   "licenseSha256": "f158b88cd51473925e1ce8c39f4c7c9e419304ad71371896c4ff18fa1351dca2",
   "voices": [
-    {
-      "preset": {
-        "id": "jiaojiao",
-        "name": "撒娇女友",
-        "description": "超级撒娇、软糯黏人的成年女友声",
-        "seed": 7213,
-        "instruction": "一位二十五岁左右的成年女性，用非常亲昵、爱撒娇的女友语气和伴侣说话。声音甜软细腻、软糯轻盈，明显的撒娇韵律与轻微鼻腔共鸣，句尾拉长一点，音调富有起伏，有期待和依恋的笑意。标准中文，不模仿儿童、不尖叫、不夸张卡通化，不用播音腔。轻轻央求对方多陪自己一会儿。",
-        "direction": "一位二十五岁左右的成年女性，用非常亲昵、爱撒娇的女友语气和伴侣说话。声音甜软细腻、软糯轻盈，明显的撒娇韵律与轻微鼻腔共鸣，句尾拉长一点，音调富有起伏，有期待和依恋的笑意。标准中文，不模仿儿童、不尖叫、不夸张卡通化，不用播音腔。轻轻央求对方多陪自己一会儿。"
-      },
-      "file": "jiaojiao.breeze",
-      "size": 7080,
-      "sha256": "ed062e118f8566d841bb3e1d706f7c13340aca6aba136c03c5de7ea42079e17a",
-      "synthetic": true,
-      "officialPreset": false,
-      "humanAuditionVerified": false,
-      "characterApproximation": false
-    },
     {
       "preset": {
         "id": "feiye",
@@ -158,58 +141,6 @@
     },
     {
       "preset": {
-        "id": "nan_gaozhongsheng",
-        "name": "男高中生",
-        "description": "虚构校园少年男声，清朗青涩、轻快真诚",
-        "seed": 61105,
-        "instruction": "虚构校园动漫里的男高中生说话声音，由成年男性配音演绎。清朗干净、略带青涩的少年男声，音域中高，声音轻盈但保持自然男声共鸣，没有成熟男性的厚重低音。说自然普通话，节奏轻快，坦率真诚，有一点活泼和不太老练的小紧张，像课间和同学聊学习与球赛。不要沙哑烟嗓，不压低声音，不用播音腔，不尖叫，不变成女性声音。",
-        "direction": "虚构校园动漫里的男高中生说话声音，由成年男性配音演绎。清朗干净、略带青涩的少年男声，音域中高，声音轻盈但保持自然男声共鸣，没有成熟男性的厚重低音。说自然普通话，节奏轻快，坦率真诚，有一点活泼和不太老练的小紧张，像课间和同学聊学习与球赛。不要沙哑烟嗓，不压低声音，不用播音腔，不尖叫，不变成女性声音。"
-      },
-      "file": "nan_gaozhongsheng.breeze",
-      "size": 6372,
-      "sha256": "4bbe88d7d69fb968ba2042f3a85a2a0a0c5485a2e86476782c12752739f64c59",
-      "synthetic": true,
-      "officialPreset": false,
-      "humanAuditionVerified": false,
-      "characterApproximation": false,
-      "referenceText": "这道题我刚刚想明白了，要不要一起看看？等写完作业，我们再去操场走一圈吧！",
-      "verificationText": "今天的练习还挺难的，不过没关系，我们一起试试，说不定很快就想通了。",
-      "verification": {
-        "engine": "local Breeze CPP v0.1.6 Vulkan",
-        "savedVoiceFreshText": true,
-        "seconds": 5.36,
-        "peak": 0.614349365234375,
-        "rms": 0.08664166721005136
-      }
-    },
-    {
-      "preset": {
-        "id": "nan_daxuesheng",
-        "name": "男大学生",
-        "description": "成年大学生男声，阳光清朗、松弛温暖，自然有笑意",
-        "seed": 61106,
-        "instruction": "二十一岁左右的成年男大学生，阳光清朗、干净温暖的年轻男声。男中音偏清亮，比校园少年更稳定放松，声音不厚重、不沙哑，有自然的胸腔共鸣和轻轻的笑意。说标准自然的普通话，像和熟悉的朋友在校园里边走边聊，节奏舒展、语速适中、真诚随和。不要霸总低音，不刻意装嫩，不用播音腔，不夸张卖萌。",
-        "direction": "二十一岁左右的成年男大学生，阳光清朗、干净温暖的年轻男声。男中音偏清亮，比校园少年更稳定放松，声音不厚重、不沙哑，有自然的胸腔共鸣和轻轻的笑意。说标准自然的普通话，像和熟悉的朋友在校园里边走边聊，节奏舒展、语速适中、真诚随和。不要霸总低音，不刻意装嫩，不用播音腔，不夸张卖萌。"
-      },
-      "file": "nan_daxuesheng.breeze",
-      "size": 5241,
-      "sha256": "a2a5a533ffce69b3972810bc3e02d25079aaf73dc52bc4458430779a0f251ce5",
-      "synthetic": true,
-      "officialPreset": false,
-      "humanAuditionVerified": false,
-      "characterApproximation": false,
-      "referenceText": "忙完了吗？要不要一起出去走走？今天天气挺好的，路上慢慢聊，你说的事我都听着。",
-      "verificationText": "别给自己太大压力，先把眼前这一件事做好。休息一会儿，我陪你聊聊。",
-      "verification": {
-        "engine": "local Breeze CPP v0.1.6 Vulkan",
-        "savedVoiceFreshText": true,
-        "seconds": 5.12,
-        "peak": 0.594635009765625,
-        "rms": 0.09183723126991707
-      }
-    },
-    {
-      "preset": {
         "id": "aojiao_text_v2",
         "name": "傲娇大小姐（文字V2）",
         "description": "傲娇大小姐纯文字设计新版；不使用视频或外部参考声音，日常输出统一音量",
@@ -295,6 +226,60 @@
       "referenceText": "真的假的啦？你今天怎么这么可爱呀。先坐一下嘛，我陪你慢慢聊天，好不好？",
       "previewLoudnessLUFS": -15.78,
       "userApprovedForInstallation": true
+    },
+    {
+      "preset": {
+        "id": "nan_gaozhongsheng",
+        "name": "男高中生",
+        "description": "虚构校园少年男声，清朗青涩、轻快真诚",
+        "seed": 61105,
+        "instruction": "虚构校园动漫里的男高中生说话声音，由成年男性配音演绎。清朗干净、略带青涩的少年男声，音域中高，声音轻盈但保持自然男声共鸣，没有成熟男性的厚重低音。说自然普通话，节奏轻快，坦率真诚，有一点活泼和不太老练的小紧张，像课间和同学聊学习与球赛。不要沙哑烟嗓，不压低声音，不用播音腔，不尖叫，不变成女性声音。",
+        "direction": "虚构校园动漫里的男高中生说话声音，由成年男性配音演绎。清朗干净、略带青涩的少年男声，音域中高，声音轻盈但保持自然男声共鸣，没有成熟男性的厚重低音。说自然普通话，节奏轻快，坦率真诚，有一点活泼和不太老练的小紧张，像课间和同学聊学习与球赛。不要沙哑烟嗓，不压低声音，不用播音腔，不尖叫，不变成女性声音。",
+        "displayOrder": 1000
+      },
+      "file": "nan_gaozhongsheng.breeze",
+      "size": 6372,
+      "sha256": "4bbe88d7d69fb968ba2042f3a85a2a0a0c5485a2e86476782c12752739f64c59",
+      "synthetic": true,
+      "officialPreset": false,
+      "humanAuditionVerified": false,
+      "characterApproximation": false,
+      "referenceText": "这道题我刚刚想明白了，要不要一起看看？等写完作业，我们再去操场走一圈吧！",
+      "verificationText": "今天的练习还挺难的，不过没关系，我们一起试试，说不定很快就想通了。",
+      "verification": {
+        "engine": "local Breeze CPP v0.1.6 Vulkan",
+        "savedVoiceFreshText": true,
+        "seconds": 5.36,
+        "peak": 0.614349365234375,
+        "rms": 0.08664166721005136
+      }
+    },
+    {
+      "preset": {
+        "id": "nan_daxuesheng",
+        "name": "男大学生",
+        "description": "成年大学生男声，阳光清朗、松弛温暖，自然有笑意",
+        "seed": 61106,
+        "instruction": "二十一岁左右的成年男大学生，阳光清朗、干净温暖的年轻男声。男中音偏清亮，比校园少年更稳定放松，声音不厚重、不沙哑，有自然的胸腔共鸣和轻轻的笑意。说标准自然的普通话，像和熟悉的朋友在校园里边走边聊，节奏舒展、语速适中、真诚随和。不要霸总低音，不刻意装嫩，不用播音腔，不夸张卖萌。",
+        "direction": "二十一岁左右的成年男大学生，阳光清朗、干净温暖的年轻男声。男中音偏清亮，比校园少年更稳定放松，声音不厚重、不沙哑，有自然的胸腔共鸣和轻轻的笑意。说标准自然的普通话，像和熟悉的朋友在校园里边走边聊，节奏舒展、语速适中、真诚随和。不要霸总低音，不刻意装嫩，不用播音腔，不夸张卖萌。",
+        "displayOrder": 1001
+      },
+      "file": "nan_daxuesheng.breeze",
+      "size": 5241,
+      "sha256": "a2a5a533ffce69b3972810bc3e02d25079aaf73dc52bc4458430779a0f251ce5",
+      "synthetic": true,
+      "officialPreset": false,
+      "humanAuditionVerified": false,
+      "characterApproximation": false,
+      "referenceText": "忙完了吗？要不要一起出去走走？今天天气挺好的，路上慢慢聊，你说的事我都听着。",
+      "verificationText": "别给自己太大压力，先把眼前这一件事做好。休息一会儿，我陪你聊聊。",
+      "verification": {
+        "engine": "local Breeze CPP v0.1.6 Vulkan",
+        "savedVoiceFreshText": true,
+        "seconds": 5.12,
+        "peak": 0.594635009765625,
+        "rms": 0.09183723126991707
+      }
     }
   ]
 }

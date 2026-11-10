@@ -19,6 +19,7 @@ export function readPack(packDir=bundled){
     if(!p||!/^[-a-z0-9_]{1,64}$/.test(p.id)||ids.has(p.id)||names.has(p.name)||entry.file!==p.id+'.breeze'||entry.synthetic!==true||typeof p.name!=='string'||!p.name.trim()||p.name.length>64||typeof p.description!=='string'||typeof p.instruction!=='string'||typeof p.direction!=='string'||!Number.isInteger(p.seed)||p.seed<0||p.seed>0xffffffff)throw Error('Invalid or duplicate preset definition');
     ids.add(p.id);names.add(p.name);
     if(p.normalizeOutput!==undefined&&typeof p.normalizeOutput!=='boolean')throw Error('Invalid normalization flag');
+    if(p.displayOrder!==undefined&&(!Number.isInteger(p.displayOrder)||Math.abs(p.displayOrder)>10000))throw Error('Invalid display order');
     const file=join(pack,entry.file);
     if(lstatSync(file).isSymbolicLink())throw Error('Linked bundle voice is not allowed');
     const bytes=readFileSync(file);
@@ -39,10 +40,13 @@ export function installPresets({root,voices,apply=false,nonCommercial=false,pack
   if(!Array.isArray(existing))throw Error('Existing preset list is not an array');
   // Validate existing runtime entries before merging; preserve every unselected entry.
   loadPresets(base);
-  const merged=[...existing],files=[];
+  const merged=[...existing],files=[],presentationChanged=[];
   for(const entry of entries){
     const p=entry.preset,match=existing.find(x=>x.id===p.id);
     if(match&&!same(match,p))throw Error('Existing preset differs; refusing to overwrite: '+p.id);
+    if(match&&['displayOrder'].some(k=>p[k]!==undefined&&p[k]!==match[k])){
+      merged[merged.findIndex(x=>x.id===p.id)]={...match,...(p.displayOrder!==undefined?{displayOrder:p.displayOrder}:{})};presentationChanged.push(p.id);
+    }
     if(!match&&existing.some(x=>x.name===p.name))throw Error('Existing preset name belongs to another ID: '+p.name);
     const target=join(dir,entry.file);
     if(existsSync(target)){
@@ -51,8 +55,8 @@ export function installPresets({root,voices,apply=false,nonCommercial=false,pack
     if(!match)merged.push(p);
   }
   if(merged.length>64)throw Error('Too many custom presets');
-  const metadataChanged=merged.length!==existing.length;
-  const report={apply,voices:entries.map(x=>({id:x.preset.id,name:x.preset.name})),newFiles:files.map(x=>x.file),metadataChanged,configurationChanged:false,reloadRequired:metadataChanged};
+  const metadataChanged=merged.length!==existing.length||presentationChanged.length>0;
+  const report={apply,voices:entries.map(x=>({id:x.preset.id,name:x.preset.name})),newFiles:files.map(x=>x.file),metadataChanged,presentationChanged,configurationChanged:false,reloadRequired:metadataChanged};
   if(!apply)return report;
   if(!nonCommercial)throw Error('Confirm the recipient has reviewed the model terms and selected research/non-commercial use (--non-commercial)');
   const lock=join(base,'.breeze-presets-install.lock'),fd=openSync(lock,'wx');

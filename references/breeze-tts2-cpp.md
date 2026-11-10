@@ -25,7 +25,7 @@ Agent 负责下载与部署。`scripts/fetch-verified.py URL DEST SHA256 --size 
 
 ## 可复用扩展与配置
 
-`assets/breeze-voice/` 包含本技能原创适配代码。它复用已安装内置语音模块的 ASR/诊断，替换合成与试听；不随包带引擎、基础权重、参考音频或用户设置。另有按需的[十三款固定音色包](breeze-saved-presets.md)，包含小型 `.breeze` 与独立模型许可，不在代码CC0授权范围。当前接口契约来自 Aurabot 1.1.24，其他版本先查 API/源码。
+`assets/breeze-voice/` 包含本技能原创适配代码。它复用已安装内置语音模块的 ASR/诊断，替换合成与试听；不随包带引擎、基础权重、参考音频或用户设置。另有按需的[十二款固定音色包](breeze-saved-presets.md)，包含小型 `.breeze` 与独立模型许可，不在代码CC0授权范围。当前接口契约来自 Aurabot 1.1.24，其他版本先查 API/源码。
 
 在选定 Breeze 根目录创建本机 `breeze-runtime.json`，字段：
 

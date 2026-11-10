@@ -1,14 +1,13 @@
-# 十三款已保存的 Breeze 讲话音色
+# 十二款已保存的 Breeze 讲话音色
 
 用户选择这些声音时读取。适用于已部署且健康的 Breeze CPP 本机说话链；不是 RVC 模型，不触发重新下载大模型、改QQ接入或修改翻唱。原有晴岚、灵汐、晚宁、星舟保留。
 
 ## 内容和准确含义
 
-`assets/breeze-presets/manifest.json` 保存实际定义、风格指令、种子、文件大小与 SHA256；同目录带十三款真实 `.breeze`，合计 87,791 字节。导入的是现有固定音色，不是让另一台机器重新随机设计。
+`assets/breeze-presets/manifest.json` 保存实际定义、风格指令、种子、文件大小与 SHA256；同目录带十二款真实 `.breeze`，合计 80,711 字节。导入的是现有固定音色，不是让另一台机器重新随机设计。
 
 | ID | 菜单名称 | 含义 |
 |---|---|---|
-| `jiaojiao` | 撒娇女友 | 成年女性，软糯亲昵、明显撒娇韵律 |
 | `feiye` | 御姐女王 | 成年女性，成熟低磁、从容坚定 |
 | `lanyangyang_style` | 懒羊羊风格（近似） | 卡通角色方向的软糯鼻音近似，不是慵懒女声、动画原声或配音演员录音 |
 | `taiwan_jutian` | 台湾女生·巨甜普通话 | 台湾成年女生讲普通话，保留自然台湾口音，声音很甜；不是台语，也不是去掉台湾腔的播音普通话 |
@@ -22,7 +21,7 @@
 | `wenrou_text_v2` | 温柔姐姐（文字V2） | 用户接受的纯文字设计新版，温润安心、轻柔清晰 |
 | `taiwan_text_v2` | 台湾腔甜妹（文字V2） | 用户接受的纯文字设计新版，台湾女生讲普通话、甜润轻盈 |
 
-这十三款在本机用 Breeze 设计后保存，再以新文本合成验证；未使用真人或动画原声录音做参考。非官方预设、非真人克隆、非商用角色授权；不保证用户主观听感或与角色原声一致。不要再次安装之前被纠正的“慵懒女声”或“去掉台湾口音的巨甜”替代品。
+这十二款在本机用 Breeze 设计后保存，再以新文本合成验证；未使用真人或动画原声录音做参考。非官方预设、非真人克隆、非商用角色授权；不保证用户主观听感或与角色原声一致。不要再次安装之前被纠正的“慵懒女声”或“去掉台湾口音的巨甜”替代品。
 
 历史兼容版本为 HoppouAI/Breeze-TTS-2.cpp v0.1.6，文件为 BRZV version 2。新版本先确认保存音色格式和 API 仍兼容，不能仅有同名文件就宣称可用。基础权重、tokenizer、运行时不在音色包内，按 [Breeze 运行时](breeze-tts2-cpp.md)复用或按需准备。
 
@@ -34,11 +33,11 @@
 
 ## 导入步骤
 
-1. 检查实际 Breeze 根目录、模型健康和现有 `voices/custom-presets.json`。**不改当前讲话、RVC、回复方式及QQ配置**。只选用户要的 ID；用户明确要整包才导入十三款。
+1. 检查实际 Breeze 根目录、模型健康和现有 `voices/custom-presets.json`。**不改当前讲话、RVC、回复方式及QQ配置**。只选用户要的 ID；用户明确要整包才导入十二款。
 2. 运行只读检查：
 
    ```text
-   node scripts/install-breeze-presets.mjs --root <实际Breeze绝对根目录> --voices jiaojiao,feiye,lanyangyang_style,taiwan_jutian
+   node scripts/install-breeze-presets.mjs --root <实际Breeze绝对根目录> --voices sajiao_text_v2,feiye,lanyangyang_style,taiwan_jutian
    # 追加五款也可按需指定，例如 --voices aojiao_daxiaojie,nan_daxuesheng
    # 用户明确要整包时才省略 --voices
    ```
@@ -52,7 +51,7 @@
 
 ## 验证
 
-`node --test scripts/test-breeze-presets.mjs scripts/test-breeze-voice.mjs scripts/test-install-voice-module.mjs` 检查十三文件摘要、只读检查、按选导入、重复执行、冲突拒绝、列表备份、原配置保留、格式/越界拒绝、独立运行目录和无需重启的列表更新；本机协议模拟检查固定voice+风格指令与旧音色参数保持。模拟不是听感证明。2026-11-10 十三款保存音色均在本机实际引擎上以新文本成功合成，未进行QQ外发或用户听感验收。
+`node --test scripts/test-breeze-presets.mjs scripts/test-breeze-voice.mjs scripts/test-install-voice-module.mjs` 检查十二文件摘要、只读检查、按选导入、重复执行、冲突拒绝、列表备份、原配置保留、格式/越界拒绝、独立运行目录和无需重启的列表更新；本机协议模拟检查固定voice+风格指令与旧音色参数保持。模拟不是听感证明。2026-11-10 十二款保存音色均在本机实际引擎上以新文本成功合成，未进行QQ外发或用户听感验收。
 
 ## 试听淘汰记录
 
@@ -61,3 +60,7 @@
 ## 四款文字V2
 
 这四款是文字直接设计后保存的成品，不使用视频参考、人声提取或外部录音。默认直接校验导入 `.breeze`，不是部署时再次随机设计；提示词、种子、参考文本也保留，供明确要求调整时使用。见[文字V2部署与数据格式](breeze-text-v2.md)。`normalizeOutput=true` 仅对四款V2生效；需在runtime JSON显式配置已核对的 `ffmpeg` 路径，实际每次回复均做双遍响度统一，约-16 LUFS、真峰值目标-1.5 dBTP；旧音色不变，失败保留文字兜底。
+
+## 撒娇版本与列表顺序
+
+用户要求删除早期 `jiaojiao`，当前包只保留 `sajiao_text_v2` 这一款撒娇女友，不从历史包恢复旧版。两个校园男声设置 `displayOrder=1000/1001`，语音适配v1.4.1按此排序，始终显示在其他音色后；后续再导入女声也不会把男声挤到中间。导入器只允许合并明确选中条目的排序字段，不覆盖声音文件、提示词或种子。对已安装旧版的用户，只有在明确要求删除重复项时才清理旧 `jiaojiao`；保留其他私人音色。

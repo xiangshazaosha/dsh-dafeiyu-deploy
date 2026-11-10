@@ -10,30 +10,38 @@ import {loadPresets,createService} from '../assets/breeze-voice/service.mjs';
 import wrapper from '../assets/breeze-voice/index.mjs';
 const temp=()=>mkdtempSync(join(tmpdir(),'dafeiyu-fixed-presets-'));
 const config=JSON.stringify({private:'not-a-real-secret',speech:'keep',rvc:'keep',replyMode:'text'});
-test('thirteen real saved presets have exact checksums and model attribution',()=>{
- const pack=readPack();assert.equal(pack.voices.length,13);
- assert.deepEqual(pack.voices.map(x=>x.preset.id),['jiaojiao','feiye','lanyangyang_style','taiwan_jutian','aojiao_daxiaojie','mihu_nvdaxuesheng','badao_nvzongcai','nan_gaozhongsheng','nan_daxuesheng','aojiao_text_v2','sajiao_text_v2','wenrou_text_v2','taiwan_text_v2']);
+test('twelve real saved presets have exact checksums and model attribution',()=>{
+ const pack=readPack();assert.equal(pack.voices.length,12);
+ assert.deepEqual(pack.voices.map(x=>x.preset.id),["feiye", "lanyangyang_style", "taiwan_jutian", "aojiao_daxiaojie", "mihu_nvdaxuesheng", "badao_nvzongcai", "aojiao_text_v2", "sajiao_text_v2", "wenrou_text_v2", "taiwan_text_v2", "nan_gaozhongsheng", "nan_daxuesheng"]);
  assert.equal(pack.voices.find(x=>x.characterApproximation).preset.id,'lanyangyang_style');
  assert(pack.voices.every(x=>x.synthetic&&!x.officialPreset));
  assert(!pack.voices.some(x=>['rexue_dongmanshaonv','luoli_keai'].includes(x.preset.id)));
  assert.equal(pack.voices.filter(x=>x.preset.normalizeOutput).length,4);
  assert(pack.voices.filter(x=>x.preset.normalizeOutput).every(x=>x.externalReferenceAudio===false));
+ assert(!pack.voices.some(x=>x.preset.id==='jiaojiao'));
+ assert.deepEqual(pack.voices.slice(-2).map(x=>x.preset.id),['nan_gaozhongsheng','nan_daxuesheng']);
+});
+test('display ordering keeps the two campus male voices last after later imports',()=>{
+ const root=temp();installPresets({root,voices:['nan_gaozhongsheng','nan_daxuesheng'],apply:true,nonCommercial:true});
+ const meta=join(root,'voices/custom-presets.json');const list=JSON.parse(readFileSync(meta));for(const p of list)delete p.displayOrder;writeFileSync(meta,JSON.stringify(list));
+ const updated=installPresets({root,voices:['nan_gaozhongsheng','nan_daxuesheng'],apply:true,nonCommercial:true});assert.equal(updated.presentationChanged.length,2);
+ installPresets({root,voices:['feiye'],apply:true,nonCommercial:true});assert.deepEqual(loadPresets(root).slice(-2).map(x=>x.id),['nan_gaozhongsheng','nan_daxuesheng']);
 });
 test('check-only is read-only; explicit selected import is repeatable and preserves config',()=>{
  const root=temp();writeFileSync(join(root,'config.json'),config);
- const preflight=installPresets({root,voices:['jiaojiao']});assert.equal(preflight.apply,false);assert.equal(existsSync(join(root,'voices')),false);
+ const preflight=installPresets({root,voices:['aojiao_text_v2']});assert.equal(preflight.apply,false);assert.equal(existsSync(join(root,'voices')),false);
  assert.throws(()=>installPresets({root,apply:true}),/non-commercial/);assert.equal(existsSync(join(root,'voices')),false);
- const first=installPresets({root,voices:['jiaojiao'],apply:true,nonCommercial:true});assert.deepEqual(first.newFiles,['jiaojiao.breeze']);
+ const first=installPresets({root,voices:['aojiao_text_v2'],apply:true,nonCommercial:true});assert.deepEqual(first.newFiles,['aojiao_text_v2.breeze']);
  assert.equal(loadPresets(root).length,5);assert(!existsSync(join(root,'voices/feiye.breeze')));
- const second=installPresets({root,voices:['jiaojiao'],apply:true,nonCommercial:true});assert.deepEqual(second.newFiles,[]);assert.equal(second.metadataChanged,false);
+ const second=installPresets({root,voices:['aojiao_text_v2'],apply:true,nonCommercial:true});assert.deepEqual(second.newFiles,[]);assert.equal(second.metadataChanged,false);
  assert.equal(readFileSync(join(root,'config.json'),'utf8'),config);
  assert(existsSync(join(first.provenanceDirectory,'BREEZEBLUE-LICENSE.txt')));
 });
 test('merges selected voices, backs up metadata, and never changes existing entries',()=>{
- const root=temp();installPresets({root,voices:['jiaojiao'],apply:true,nonCommercial:true});const old=readFileSync(join(root,'voices/custom-presets.json'));
+ const root=temp();installPresets({root,voices:['aojiao_text_v2'],apply:true,nonCommercial:true});const old=readFileSync(join(root,'voices/custom-presets.json'));
  const result=installPresets({root,voices:['feiye'],apply:true,nonCommercial:true});
  assert.equal(loadPresets(root).length,6);assert(readFileSync(join(result.backup,'custom-presets.json')).equals(old));
- assert.deepEqual(JSON.parse(readFileSync(join(root,'voices/custom-presets.json'))).map(x=>x.id),['jiaojiao','feiye']);
+ assert.deepEqual(JSON.parse(readFileSync(join(root,'voices/custom-presets.json'))).map(x=>x.id),['aojiao_text_v2','feiye']);
 });
 test('unselected private presets and their files survive an import unchanged',()=>{
  const root=temp();mkdirSync(join(root,'voices'));
@@ -53,16 +61,16 @@ test('a newer pack stores provenance separately instead of replacing older recor
 test('conflicting voice/metadata and lock fail without clobbering or partial selection',()=>{
  const root=temp();mkdirSync(join(root,'voices'));writeFileSync(join(root,'voices/feiye.breeze'),'existing unrelated voice');
  assert.throws(()=>installPresets({root,apply:true,nonCommercial:true}),/refusing to overwrite/);
- assert(!existsSync(join(root,'voices/jiaojiao.breeze')));assert.equal(readFileSync(join(root,'voices/feiye.breeze'),'utf8'),'existing unrelated voice');
- const other=temp();installPresets({root:other,voices:['jiaojiao'],apply:true,nonCommercial:true});
+ assert(!existsSync(join(root,'voices/aojiao_text_v2.breeze')));assert.equal(readFileSync(join(root,'voices/feiye.breeze'),'utf8'),'existing unrelated voice');
+ const other=temp();installPresets({root:other,voices:['aojiao_text_v2'],apply:true,nonCommercial:true});
  const file=join(other,'voices/custom-presets.json'),list=JSON.parse(readFileSync(file));list[0].direction='Keep my custom delivery';writeFileSync(file,JSON.stringify(list));
- assert.throws(()=>installPresets({root:other,voices:['jiaojiao'],apply:true,nonCommercial:true}),/preset differs/);
+ assert.throws(()=>installPresets({root:other,voices:['aojiao_text_v2'],apply:true,nonCommercial:true}),/preset differs/);
  const locked=temp();writeFileSync(join(locked,'.breeze-presets-install.lock'),'another installer');assert.throws(()=>installPresets({root:locked,apply:true,nonCommercial:true}));assert(!existsSync(join(locked,'voices')));
 });
 test('bundle corruption, unrecognized IDs and traversal are rejected',()=>{
  const pack=temp(),source=fileURLToPath(new URL('../assets/breeze-presets/',import.meta.url));
  for(const name of readdirSync(source))copyFileSync(join(source,name),join(pack,name));
- const original=readFileSync(join(pack,'manifest.json'));writeFileSync(join(pack,'jiaojiao.breeze'),'corrupt');assert.throws(()=>readPack(pack),/checksum/);
+ const original=readFileSync(join(pack,'manifest.json'));writeFileSync(join(pack,'aojiao_text_v2.breeze'),'corrupt');assert.throws(()=>readPack(pack),/checksum/);
  const manifest=JSON.parse(original);manifest.voices[0].file='../escape.breeze';writeFileSync(join(pack,'manifest.json'),JSON.stringify(manifest));assert.throws(()=>readPack(pack),/Invalid/);
  assert.throws(()=>installPresets({root:temp(),voices:['../escape']}),/Select/);
 });

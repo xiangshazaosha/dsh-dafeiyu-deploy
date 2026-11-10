@@ -42,10 +42,11 @@ export function loadPresets(root) {
     const rel=relative(realpathSync(join(root,'voices')),realpathSync(voice));
     if(rel.startsWith('..')||isAbsolute(rel)||!statSync(voice).isFile())throw Error('Breeze 音色文件越界或格式不合法。');
     if(p.normalizeOutput!==undefined&&typeof p.normalizeOutput!=='boolean')throw Error('音量统一标记不合法。');
+    if(p.displayOrder!==undefined&&(!Number.isInteger(p.displayOrder)||Math.abs(p.displayOrder)>10000))throw Error('音色排序值不合法。');
     ids.add(p.id);names.add(p.name);
-    return {id:p.id,name:p.name,description:p.description,instruction:p.instruction,seed:p.seed,...(p.direction?{direction:p.direction}:{}),...(p.normalizeOutput?{normalizeOutput:true}:{})};
+    return {id:p.id,name:p.name,description:p.description,instruction:p.instruction,seed:p.seed,...(p.direction?{direction:p.direction}:{}),...(p.normalizeOutput?{normalizeOutput:true}:{}),...(p.displayOrder!==undefined?{displayOrder:p.displayOrder}:{})};
   });
-  return [...PRESETS,...custom];
+  return [...PRESETS,...custom.sort((a,b)=>(a.displayOrder??0)-(b.displayOrder??0))];
 }
 export function validateText(value) {
   const text = String(value ?? '').trim();
