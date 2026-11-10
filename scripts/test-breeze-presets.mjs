@@ -10,11 +10,12 @@ import {loadPresets,createService} from '../assets/breeze-voice/service.mjs';
 import wrapper from '../assets/breeze-voice/index.mjs';
 const temp=()=>mkdtempSync(join(tmpdir(),'dafeiyu-fixed-presets-'));
 const config=JSON.stringify({private:'not-a-real-secret',speech:'keep',rvc:'keep',replyMode:'text'});
-test('eleven real saved presets have exact checksums and model attribution',()=>{
- const pack=readPack();assert.equal(pack.voices.length,11);
- assert.deepEqual(pack.voices.map(x=>x.preset.id),['jiaojiao','feiye','lanyangyang_style','taiwan_jutian','aojiao_daxiaojie','mihu_nvdaxuesheng','badao_nvzongcai','rexue_dongmanshaonv','nan_gaozhongsheng','nan_daxuesheng','luoli_keai']);
+test('nine real saved presets have exact checksums and model attribution',()=>{
+ const pack=readPack();assert.equal(pack.voices.length,9);
+ assert.deepEqual(pack.voices.map(x=>x.preset.id),['jiaojiao','feiye','lanyangyang_style','taiwan_jutian','aojiao_daxiaojie','mihu_nvdaxuesheng','badao_nvzongcai','nan_gaozhongsheng','nan_daxuesheng']);
  assert.equal(pack.voices.find(x=>x.characterApproximation).preset.id,'lanyangyang_style');
  assert(pack.voices.every(x=>x.synthetic&&!x.officialPreset));
+ assert(!pack.voices.some(x=>['rexue_dongmanshaonv','luoli_keai'].includes(x.preset.id)));
 });
 test('check-only is read-only; explicit selected import is repeatable and preserves config',()=>{
  const root=temp();writeFileSync(join(root,'config.json'),config);
@@ -36,7 +37,7 @@ test('unselected private presets and their files survive an import unchanged',()
  const root=temp();mkdirSync(join(root,'voices'));
  const personal={id:'local_only',name:'Unshared local voice',description:'Keep local',instruction:'Local direction',direction:'Local direction',seed:90};
  writeFileSync(join(root,'voices/local_only.breeze'),'private test fixture');writeFileSync(join(root,'voices/custom-presets.json'),JSON.stringify([personal]));
- installPresets({root,voices:['luoli_keai'],apply:true,nonCommercial:true});
+ installPresets({root,voices:['aojiao_daxiaojie'],apply:true,nonCommercial:true});
  const list=JSON.parse(readFileSync(join(root,'voices/custom-presets.json')));assert.deepEqual(list[0],personal);assert.equal(list.length,2);
  assert.equal(readFileSync(join(root,'voices/local_only.breeze'),'utf8'),'private test fixture');assert(!readPack().voices.some(x=>x.preset.id==='local_only'));
 });

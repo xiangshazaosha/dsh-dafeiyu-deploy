@@ -27,10 +27,8 @@ node_modules/
 !assets/breeze-presets/aojiao_daxiaojie.breeze
 !assets/breeze-presets/mihu_nvdaxuesheng.breeze
 !assets/breeze-presets/badao_nvzongcai.breeze
-!assets/breeze-presets/rexue_dongmanshaonv.breeze
 !assets/breeze-presets/nan_gaozhongsheng.breeze
 !assets/breeze-presets/nan_daxuesheng.breeze
-!assets/breeze-presets/luoli_keai.breeze
 *.onnx
 *.bin
 *.dll

@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "packId": "dafeiyu-eleven-selected-20261110",
+  "packId": "dafeiyu-nine-selected-20261110",
   "createdOn": "2026-11-10",
   "engineCompatibility": "HoppouAI/Breeze-TTS-2.cpp v0.1.6, BRZV version 2; revalidate other versions",
   "modelSource": "https://huggingface.co/BreezeBlue/Breeze-TTS-2",
@@ -158,32 +158,6 @@
     },
     {
       "preset": {
-        "id": "rexue_dongmanshaonv",
-        "name": "热血动漫少女",
-        "description": "成年动漫女声，清亮元气、热血坚定，朝气十足",
-        "seed": 61104,
-        "instruction": "十八岁以上的成年女性配音演员，演绎热血动漫中的青春女主角。明亮清澈的女中高音，充满元气、勇气和向前冲的劲头。说普通话，节奏轻快有力，重音鲜明，音调自然跃动，鼓励人的句子坚定又充满笑意。热血但不破音、不持续喊叫、不刺耳，不尖嗓，不用新闻播音腔，不要儿童奶音，字词说完整清楚。",
-        "direction": "十八岁以上的成年女性配音演员，演绎热血动漫中的青春女主角。明亮清澈的女中高音，充满元气、勇气和向前冲的劲头。说普通话，节奏轻快有力，重音鲜明，音调自然跃动，鼓励人的句子坚定又充满笑意。热血但不破音、不持续喊叫、不刺耳，不尖嗓，不用新闻播音腔，不要儿童奶音，字词说完整清楚。"
-      },
-      "file": "rexue_dongmanshaonv.breeze",
-      "size": 7124,
-      "sha256": "a4e04d6fbffb405c08d9cc08658a9027cb60ac28e45c248469d54cf18fbdded1",
-      "synthetic": true,
-      "officialPreset": false,
-      "humanAuditionVerified": false,
-      "characterApproximation": false,
-      "referenceText": "别放弃呀！还没有到最后呢。只要我们一起努力，就一定能找到办法。准备好了的话，现在就出发吧！",
-      "verificationText": "今天也要打起精神来！就算慢一点也没关系，我们一起把这件事做好！",
-      "verification": {
-        "engine": "local Breeze CPP v0.1.6 Vulkan",
-        "savedVoiceFreshText": true,
-        "seconds": 7.04,
-        "peak": 0.5130615234375,
-        "rms": 0.08216366544571095
-      }
-    },
-    {
-      "preset": {
         "id": "nan_gaozhongsheng",
         "name": "男高中生",
         "description": "虚构校园少年男声，清朗青涩、轻快真诚",
@@ -232,32 +206,6 @@
         "seconds": 5.12,
         "peak": 0.594635009765625,
         "rms": 0.09183723126991707
-      }
-    },
-    {
-      "preset": {
-        "id": "luoli_keai",
-        "name": "萝莉音",
-        "description": "成年女性配音的可爱高音风格，清脆轻盈、俏皮软甜",
-        "seed": 61107,
-        "instruction": "二十二岁成年女性配音演员的动漫可爱高音风格，保留成年女性配音质感，不模仿真实儿童。音色清脆轻盈、软甜圆润，音域偏高但不尖锐，带一点自然鼻音和俏皮笑意。说清楚自然的普通话，语调轻快活泼，尾音可爱地扬起来，像开心地介绍今天的小发现。不是耳语，不呻吟，不用暧昧或性感语气，不尖叫、不破音、不机械朗读。",
-        "direction": "二十二岁成年女性配音演员的动漫可爱高音风格，保留成年女性配音质感，不模仿真实儿童。音色清脆轻盈、软甜圆润，音域偏高但不尖锐，带一点自然鼻音和俏皮笑意。说清楚自然的普通话，语调轻快活泼，尾音可爱地扬起来，像开心地介绍今天的小发现。不是耳语，不呻吟，不用暧昧或性感语气，不尖叫、不破音、不机械朗读。"
-      },
-      "file": "luoli_keai.breeze",
-      "size": 6314,
-      "sha256": "381f5fc737389bfe2b2c9e257890f5134dc35be5ae230c0f052f2bc10e3499d9",
-      "synthetic": true,
-      "officialPreset": false,
-      "humanAuditionVerified": false,
-      "characterApproximation": false,
-      "referenceText": "你看你看，我今天发现了一件超有趣的事情！先别急着猜，听我慢慢告诉你呀。",
-      "verificationText": "今天的小任务完成啦！休息一下，再一起想想接下来玩点什么吧。",
-      "verification": {
-        "engine": "local Breeze CPP v0.1.6 Vulkan",
-        "savedVoiceFreshText": true,
-        "seconds": 6.32,
-        "peak": 0.36859130859375,
-        "rms": 0.0826347356287797
       }
     }
   ]
