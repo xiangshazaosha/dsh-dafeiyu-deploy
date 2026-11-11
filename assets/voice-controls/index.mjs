@@ -21,7 +21,7 @@ export function formatReplyItems(items, mode) {
   });
 }
 export default {
-  id: 'voice-controls', name: '音色切换', version: '1.3.1', api: 1,
+  id: 'voice-controls', name: '音色切换', version: '1.6.0', api: 1,
   description: '选择讲话和翻唱音色，以及仅文字、仅语音或文字加语音的回复方式。',
   panel: 'panel.js',
   setup(api) {
@@ -32,12 +32,18 @@ export default {
       const cover=api.use('breeze-cover')?.state?.();
       const voices = speech?.breezeVoices?.() || [];
       const rvc = song?.status?.()?.voices || [];
-      return { ok: true, reply: {selected:cfg.ext?.['voice-controls']?.replyMode||'auto',modes:REPLY_MODES,voiceEnabled:!!cfg.voice?.enabled}, speech: { selected: cfg.ext?.voice?.breezeVoice || 'qinglan', enabled: cfg.ext?.voice?.breezeEnabled !== false, voices }, rvc: { selected: cfg.song?.voice || '', voices: rvc, arrangement:cover?.rvcArrangement||cfg.ext?.['breeze-cover']?.rvcArrangement||'mixed' }, breezeCover:cover?{selectedVoice:cover.selectedVoice,voices:cover.voices,ready:cover.ready,arrangement:cover.breezeArrangement,keepMelody:cover.keepMelody}:null };
+      return { ok: true, coverRouting:cover?{engine:cover.engine,profile:cover.profile,reuseFinished:cover.reuseFinished!==false,qqDurationSec:cover.qqDurationSec,guardInstalled:cover.qq?.guardInstalled}:null, reply: {selected:cfg.ext?.['voice-controls']?.replyMode||'auto',modes:REPLY_MODES,voiceEnabled:!!cfg.voice?.enabled}, speech: { selected: cfg.ext?.voice?.breezeVoice || 'qinglan', enabled: cfg.ext?.voice?.breezeEnabled !== false, voices }, rvc: { selected: cfg.song?.voice || '', voices: rvc, pitch:Number(cfg.song?.pitch)||0, arrangement:cover?.rvcArrangement||cfg.ext?.['breeze-cover']?.rvcArrangement||'mixed' }, breezeCover:cover?{selectedVoice:cover.selectedVoice,voices:cover.voices,ready:cover.ready,arrangement:cover.breezeArrangement,keepMelody:cover.keepMelody}:null };
     };
     api.route('/state', state);
     api.route('/select', async req => {
       const body = await api.core.http.body(req);
       const current = state();
+      if(body.kind==='reuse'){
+        if(typeof body.enabled!=='boolean')return {ok:false,message:'成品优先开关须为开启或关闭'};
+        const cover=api.use('breeze-cover');if(!cover)return {ok:false,message:'翻唱模块未运行，未修改成品策略'};
+        cover.selectSettings({reuseFinished:body.enabled});
+        return {...state(),message:body.enabled?'已开启成品优先：仅复用符合当前引擎、音色和版本的成品。没有开始制作或发送。':'已关闭成品优先：下一单按选定音色重新换声；分离缓存保留。没有现在开始制作或发送。'};
+      }
       if(body.kind==='reply'){
         if(!REPLY_MODES.some(m=>m.id===body.mode))return {ok:false,message:'请选择列表中的回复方式。'};
         if((body.mode==='voice'||body.mode==='both')&&typeof api.use('voice')?.speak!=='function')return {ok:false,message:'语音模块没在运行，请先在「扩展」里打开语音模块。'};
@@ -49,6 +55,25 @@ export default {
         api.setConfig({ext:{voice:{breezeVoice:body.voice}}});
         return {ok:true,message:'讲话音色已保存，翻唱音色未改变。',...state()};
       }
+      if(body.kind==='cover'){
+        const cover=api.use('breeze-cover');if(!cover)return {ok:false,message:'统一翻唱模块未运行，未修改设置'};
+        if(!['breeze','rvc'].includes(body.engine))return {ok:false,message:'请选择Breeze或RVC'};
+        if(!['mixed','acappella'].includes(body.arrangement))return {ok:false,message:'请选择清唱或带伴奏'};
+        const list=body.engine==='breeze'?current.breezeCover?.voices:current.rvc.voices;
+        if(!list?.some(v=>v.id===body.voice))return {ok:false,message:'请选择对应引擎列表中的音色'};
+        const seconds=Number(body.qqDurationSec??current.coverRouting.qqDurationSec??60);
+        if(!Number.isInteger(seconds)||seconds<1||seconds>180)return {ok:false,message:'QQ片段长度须为1–180秒'};
+        if(body.engine==='breeze'){
+          const keep=Number(body.keepMelody);if(![0,1,2].includes(keep))return {ok:false,message:'保留旋律须为0、1或2'};
+          cover.selectSettings({engine:body.engine,voice:body.voice,breezeArrangement:body.arrangement,keepMelody:keep,qqDurationSec:seconds});
+        }else{
+          const pitch=Number(body.pitch??current.rvc.pitch);if(!Number.isInteger(pitch)||pitch<-24||pitch>24)return {ok:false,message:'RVC变调须为-24到24半音'};
+          cover.selectSettings({engine:body.engine,rvcArrangement:body.arrangement,qqDurationSec:seconds});
+          api.setConfig({song:{voice:body.voice,pitch,maxVoiceSec:seconds}});
+        }
+        return {...state(),message:'统一翻唱设置已保存，QQ与制作页共用；讲话音色和回复方式未变。'};
+      }
+      if(body.kind==='engine'){const cover=api.use('breeze-cover');if(!cover)return {ok:false,message:'统一翻唱模块未运行，未修改引擎'};cover.selectSettings({engine:body.voice,qqDurationSec:body.qqDurationSec});return {...state(),message:'QQ点歌默认引擎已保存，不会立刻制作或发送'};}
       if(body.kind==='breeze'){const cover=api.use('breeze-cover');if(!cover)return {ok:false,message:'Breeze翻唱模块未运行'};cover.selectSettings({voice:body.voice,breezeArrangement:body.arrangement,keepMelody:body.keepMelody});return {...state(),message:'Breeze翻唱音色和版本已保存，讲话及RVC设置不变。'};}
       if (body.kind === 'rvc') {
         if (!current.rvc.voices.some(v => v.id === body.voice)) return {ok:false,message:'请选择列表中的翻唱音色。'};

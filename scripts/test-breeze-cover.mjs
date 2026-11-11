@@ -53,18 +53,18 @@ test('both controls retain two clear choices and never cross-write speech/reply 
   assert.equal(f.cfg.ext.voice.breezeVoice,'speech-keep');assert.equal(f.cfg.ext['voice-controls'].replyMode,'voice');assert.equal(f.cfg.song.root,f.opts.getConfig().song.root);
   const before=JSON.stringify(f.cfg);assert.equal((await select({kind:'rvc',voice:'rvc-fixture',arrangement:'bad'})).ok,false);assert.equal(JSON.stringify(f.cfg),before);
   enabled=false;await select({kind:'rvc',voice:'rvc-fixture',arrangement:'acappella'});assert.equal(f.cfg.ext['breeze-cover'].rvcArrangement,'acappella');enabled=true;
-  const data=routes.get('/state')(),flat=render(new URL('../assets/voice-controls/panel.js',import.meta.url),[data,data.speech.selected,data.rvc.selected,'','',data.reply.selected,data.breezeCover.selectedVoice,data.breezeCover.arrangement,data.rvc.arrangement,String(data.breezeCover.keepMelody)]);
-  assert.equal(flat.filter(x=>x.type==='Select').length,7);assert.equal(flat.filter(x=>x.type==='Select'&&x.props.options?.some(o=>o.value==='acappella')).length,2);
-  assert(flat.some(x=>x.type==='Btn'&&x.children.includes('保存Breeze翻唱设置')));
+  const data=routes.get('/state')(),flat=render(new URL('../assets/voice-controls/panel.js',import.meta.url),[data,data.speech.selected,data.reply.selected,'breeze',data.breezeCover.selectedVoice,data.rvc.selected,data.breezeCover.arrangement,data.rvc.arrangement,String(data.breezeCover.keepMelody),'0','60','','']);
+  assert.equal(flat.filter(x=>x.type==='Select').length,7);assert.equal(flat.filter(x=>x.type==='Select'&&x.props.options?.some(o=>o.value==='acappella')).length,1);
+  assert(flat.some(x=>x.type==='Btn'&&x.children.includes('保存统一翻唱设置')));assert.equal(flat.filter(x=>x.props?.role==='switch').length,1);
  })();
 });
 test('studio renders real per-variant players and a local-only start button for each engine',t=>{
  const f=fixture(t),s=createStudio(f.opts);f.cleanup.push(()=>s.dispose());const data=s.state();
  data.jobs=[{id:'fixture',engine:'breeze',voiceName:'女声',title:'测试',stage:'完成',status:'done',warnings:[],variants:['acappella','mixed']}];
  for(const engine of ['breeze','rvc']){
-  const flat=render(new URL('../assets/breeze-cover/panel.js',import.meta.url),[data,engine,'sajiao_text_v2','rvc-fixture','acappella','2','','local','',[],'','0','10','','0','','']);
+  const flat=render(new URL('../assets/breeze-cover/panel.js',import.meta.url),[data,'','local','',[],'','0','10','','','']);
   const players=flat.filter(x=>x.type==='audio');assert.equal(players.length,2);assert(players.some(x=>x.props.src.includes('arrangement=acappella')));assert(players.some(x=>x.props.src.includes('arrangement=mixed')));
-  assert(flat.some(x=>x.type==='Btn'&&x.children.includes('开始本机制作（不发QQ）')));
+  assert(flat.some(x=>x.type==='Btn'&&x.children.includes('按统一设置开始本机制作（不发QQ）')));
  }
 });
 test('owner tool permissions and explicit-version send guard without QQ',async t=>{
@@ -72,10 +72,10 @@ test('owner tool permissions and explicit-version send guard without QQ',async t
  const id='fixture-done',dir=join(f.work,'breeze-cover/jobs',id);mkdirSync(dir,{recursive:true});
  const files={acappella:join(dir,'acappella.mp3'),mixed:join(dir,'mixed.mp3')};for(const p of Object.values(files))writeFileSync(p,'fixture');
  writeFileSync(join(f.root,'jobs.json'),JSON.stringify([{id,status:'done',files,createdAt:1}]));
- definition.setup({dir:new URL('../assets/breeze-cover/',import.meta.url).pathname,dataDir:()=>f.root,config:()=>f.cfg,settings:f.opts.getSettings,saveSettings:f.opts.saveSettings,use:id=>id==='voice'?f.opts.getBreeze():f.opts.getSong(),lib:id=>id==='core/store.js'?{dataDir:()=>f.work}:{songUrl:f.opts.resolveSongUrl},onDispose:fn=>{dispose=fn;},route:(p,fn)=>routes.set(p,fn),tool:fn=>{toolsBuilder=fn;},defineTool:x=>x,rule:()=>{},log:{},core:{hub:{turnHasOwner:()=>owner},http:{raw:async x=>Buffer.from(JSON.stringify(x)),query:x=>x,send:()=>{}}},sendVoiceFile:async()=>{sends++;}});f.cleanup.push(()=>dispose());
+ definition.setup({dir:new URL('../assets/breeze-cover/',import.meta.url).pathname,dataDir:()=>f.root,config:()=>f.cfg,settings:f.opts.getSettings,saveSettings:f.opts.saveSettings,use:id=>id==='voice'?f.opts.getBreeze():f.opts.getSong(),lib:id=>id==='core/store.js'?{dataDir:()=>f.work}:{songUrl:f.opts.resolveSongUrl},on:()=>{},every:()=>{},command:()=>{},isOwner:()=>owner,onDispose:fn=>{dispose=fn;},route:(p,fn)=>routes.set(p,fn),tool:fn=>{toolsBuilder=fn;},defineTool:x=>x,rule:()=>{},log:{},core:{hub:{turnHasOwner:()=>owner},http:{raw:async x=>Buffer.from(JSON.stringify(x)),query:x=>x,send:()=>{}}},sendText:async()=>{},sendVoiceFile:async()=>{sends++;}});f.cleanup.push(()=>dispose());
  assert.deepEqual(toolsBuilder({level:'full',chat:{kind:'group'}}),[]);assert.deepEqual(toolsBuilder({level:'limited',chat:{kind:'private'}}),[]);
- const tools=toolsBuilder({level:'full',chat:{kind:'private'},sessionId:'fixture'});assert.equal(tools.length,4);await assert.rejects(()=>tools[0].execute({}),/主人/);owner=true;assert.equal((await tools[0].execute({})).ok,true);
- await assert.rejects(()=>routes.get('/send')({id}),/明确选择/);assert.equal(sends,0);
+ const tools=toolsBuilder({level:'full',chat:{kind:'private'},sessionId:'fixture'});assert.equal(tools.length,5);await assert.rejects(()=>tools[0].execute({}),/主人/);owner=true;assert.equal((await tools[0].execute({})).ok,true);
+ const invalid=await routes.get('/send')({id});assert.equal(invalid.ok,false);assert.match(invalid.message,/明确选择/);assert.equal(sends,0);
 });
 test('WAV structural checks reject invalid/truncated data',t=>{
  const f=fixture(t),file=join(f.dir,'invalid.wav');writeFileSync(file,'not a song');assert.throws(()=>wavInfo(file),/有效WAV/);

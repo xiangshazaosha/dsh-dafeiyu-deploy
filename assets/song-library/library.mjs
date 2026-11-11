@@ -29,14 +29,37 @@ export function writeIndex(root, items) {
   writeFileSync(tmp, JSON.stringify({ version: 1, items }, null, 2), { encoding: 'utf8', flag: 'wx' });
   try { renameSync(tmp, target); } finally { if (existsSync(tmp)) unlinkSync(tmp); }
 }
-export function match(root, query, { songId, arrangement } = {}) {
+function compatible(entry,{voice,pitch,engine}={}){
+  return (!engine||(entry.engine||'rvc')===engine)&&(!voice||entry.voice===voice)&&(pitch===undefined||entry.pitch!=null&&Number.isFinite(Number(entry.pitch))&&Number(entry.pitch)===Number(pitch));
+}
+// Recover original-source identity, never a finished cover/vocal file. Voice
+// and pitch are irrelevant here: the new task still uses the current profile.
+export function sourceHint(root,query){
+  const raw=String(stripArrangement(query)).normalize('NFKC'),q=normal(raw),tokens=raw.split(/[\s《》「」“”"'，,、:：;；|/—–-]+/).map(normal).filter(Boolean);if(!q||/原唱|原版|换版|其他版本|另一个版本|新版本|升调|降调|变调/.test(q))return null;
+  const candidates=[];
+  for(const e of readIndex(root)){
+    if(e.disabled||!/^\d{1,20}$/.test(String(e.songId||'')))continue;
+    const aliases=Array.isArray(e.aliases)?e.aliases:[],terms=[e.title,...aliases].map(normal).filter(x=>x.length>=2);
+    const score=Math.max(0,...terms.filter(x=>q.includes(x)).map(x=>x.length));if(!score)continue;
+    let rest=q;for(const part of [e.title,e.artist,e.version,...aliases].map(normal).filter(Boolean).sort((a,b)=>b.length-a.length))rest=rest.split(part).join('');
+    rest=rest.replace(/请|帮我|给我|播放|点歌|想听|唱|的/g,'');
+    if(rest){const boundary=terms.some(x=>tokens.includes(x)||q.endsWith('的'+x)),restricted=/原唱|原版|官方|现场|伴奏|纯音乐|remix|live|dj|指定|必须|只要|不要|别用|版本|版/i.test(rest);if(!boundary||restricted||rest.length>80)continue;}
+    candidates.push({entry:e,score});
+  }
+  const best=Math.max(0,...candidates.map(x=>x.score));let pool=candidates.filter(x=>x.score===best);if(!pool.length)return null;
+  const preferredIds=new Set(pool.filter(x=>x.entry.preferred===true).map(x=>String(x.entry.songId)));if(preferredIds.size===1)pool=pool.filter(x=>preferredIds.has(String(x.entry.songId)));
+  const ids=new Map();for(const x of pool.sort((a,b)=>Number(a.entry.arrangement==='acappella')-Number(b.entry.arrangement==='acappella'))){const e=x.entry,id=String(e.songId);if(!ids.has(id))ids.set(id,{id,songId:id,name:e.title,artists:e.artist||'',version:String(e.version||'').replace(/·清唱无伴奏$/,''),alias:Array.isArray(e.aliases)?e.aliases:[]});}
+  const list=[...ids.values()];return list.length===1?{kind:'source',...list[0]}:{kind:'ambiguous',candidates:list};
+}
+export function match(root, query, { songId, arrangement,voice,pitch,engine } = {}) {
+  const scope={voice,pitch,engine};
   const mode = arrangement || requestedArrangement(query) || 'mixed';
   const clean = stripArrangement(query);
-  const result = matchArrangement(root, clean, songId, mode);
+  const result = matchArrangement(root, clean, songId, mode,scope);
   if (mode !== 'acappella') return result;
-  const base = matchArrangement(root, clean, songId, 'mixed');
+  const base = matchArrangement(root, clean, songId, 'mixed',scope);
   if (base.kind === 'match') {
-    const variants = readIndex(root).filter(e => !e.disabled && e.arrangement === 'acappella' && e.sourceSha256 === base.entry.sha256);
+    const variants = readIndex(root).filter(e => !e.disabled && compatible(e,scope) && e.arrangement === 'acappella' && e.sourceSha256 === base.entry.sha256);
     if (variants.length === 1) return { kind: 'match', entry: variants[0], file: safeFile(root, variants[0].file) };
     if (variants.length > 1) return { kind: 'ambiguous', entries: variants };
     if (result.kind === 'match' && result.entry.artist === base.entry.artist && result.entry.songId && result.entry.songId === base.entry.songId) return result;
@@ -46,10 +69,10 @@ export function match(root, query, { songId, arrangement } = {}) {
   if (result.kind === 'match' || result.kind === 'ambiguous') return result;
   return { kind: 'no-vocal-source' };
 }
-function matchArrangement(root, query, songId, mode) {
+function matchArrangement(root, query, songId, mode,scope={}) {
   const q = normal(query);
   if (!q && !songId) return { kind: 'none' };
-  const entries = readIndex(root).filter(entry => !entry.disabled && (entry.arrangement || 'mixed') === mode);
+  const entries = readIndex(root).filter(entry => !entry.disabled && compatible(entry,scope) && (entry.arrangement || 'mixed') === mode);
   if (songId) {
     const exact = entries.filter(entry => String(entry.songId || '') === String(songId));
     if (exact.length === 1) return { kind: 'match', entry: exact[0], file: safeFile(root, exact[0].file) };

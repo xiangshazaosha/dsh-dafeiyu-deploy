@@ -6,6 +6,10 @@
 *.mp3
 *.wav
 *.flac
+*.m4a
+*.mp4
+*.aac
+*.opus
 *.png
 *.jpg
 *.jpeg
@@ -43,3 +47,9 @@ backups/
 **/breeze-runtime.json
 **/installation.json
 **/audio-output.json
+**/local-sources.json
+**/source-folders.json
+**/qq-requests.json
+**/jobs.json
+**/validated-stems.json
+**/歌曲库索引.json

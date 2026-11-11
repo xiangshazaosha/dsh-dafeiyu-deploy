@@ -1,6 +1,6 @@
 ---
 name: dsh-dafeiyu-deploy
-description: 为已安装 DeepSeek Harness 的用户按需部署、补齐或修复大肥鱼桌宠、Aurabot QQ、TTS、RVC/Breeze CPP 翻唱与清唱选择、歌曲来源、成品库及 B站/抖音。先检查已有环境，仅补缺项；支持单项接续和只检查，不包含 DSH 本体安装。
+description: 为已安装 DeepSeek Harness 的用户按需部署、补齐或修复大肥鱼桌宠、Aurabot QQ、TTS、RVC/Breeze CPP 统一翻唱、原曲匹配与成品复用开关、歌曲来源及 B站/抖音。先检查已有环境，仅补缺项；支持单项接续和只检查，不包含 DSH 本体安装。
 ---
 
 # DSH 大肥鱼部署助手
@@ -21,14 +21,20 @@ description: 为已安装 DeepSeek Harness 的用户按需部署、补齐或修�
 | 6 | 成品库优先、清唱与“上一首改成清唱”接续 | [成品优先扩展](references/song-library.md)、[清唱与接续](references/acappella.md) |
 | 7 | B站：先只读浏览，互动另选 | [社交模块](references/social.md)的B站部分 |
 | 8 | 抖音：先只读浏览，互动另选 | [社交模块](references/social.md)的抖音部分 |
-| 9 | Breeze CPP 实验翻唱 / 双引擎音色和清唱选择 | [本机翻唱插件](references/breeze-cover.md) |
+| 9 | Breeze CPP / RVC 统一引擎、音色、清唱、原曲匹配及成品复用开关 | [本机翻唱插件](references/breeze-cover.md)、[路由与复用](references/cover-routing-and-reuse.md) |
 | 0 | 只检查 / 不确定，从目标帮我判断 | [选择与预检](references/selection-and-preflight.md) |
 
 这些是稳定的功能编号，不是必须按顺序执行的安装步骤。用户主动要求“整套”才规划全套；账号登录、外发、费用和许可仍分别处理。目录迁移、升级和故障诊断也可单独请求，不绑定全套安装。
 
 用户要求“找不到音色按钮”“讲话/RVC如何切换”或“仅文字/仅语音/混合回复”，读[可见音色与回复控制](references/voice-controls.md)，复用或安装独立控制页，不把 schema 存在当界面可见，也不把语音概率 100% 当强制全语音。网关断线先按[既有网关修复](references/snowluma-setup-and-reuse.md#控制台在运行但消息网关断线)检查，别重装声音来修连接。
 
-用户要“歌曲分离→用 `.breeze` 换声→混回伴奏”或在 Breeze、RVC 里选清唱时，读[本机翻唱插件](references/breeze-cover.md)。随包包含可安装插件和两个版本的真实导出流程，不只是提示词；先做10秒本机试听，不自动发送QQ。Breeze仍是实验换声，当前支持1–180秒片段，不能承诺旋律保真或完整长歌。两个引擎与讲话设置独立；不附用户歌曲、私人设置或额外讲话轮换功能。
+用户要“歌曲分离→用 `.breeze` 换声→混回伴奏”或在 Breeze、RVC 里选清唱时，读[本机翻唱插件](references/breeze-cover.md)。只有“音色切换”编辑统一声音设置，“翻唱制作”只读摘要并选歌、制作/试听和看记录。QQ 默认引擎、本地原曲优先、网易云自动选版本、重复/串音和已翻唱成品开关，另读[路由与复用](references/cover-routing-and-reuse.md)。不要混淆本地原曲、分离缓存与最终成品；换音色只复用相符成品，关闭成品优先则重新换声而不清空分离缓存。
+
+随包包含实际可安装源码和清唱/伴奏导出，不只是提示词。部署验收先做10秒本机试听，不向QQ试发；主人真实点歌的生产请求由统一路由完成后只提交指定版本一次，不能另开本机任务或手动重复发送。Breeze仍是实验换声，当前支持1–180秒片段，不能承诺旋律保真或完整长歌。分离使用实际安装的后端，不把Breeze Vulkan换声等同全链GPU。两个引擎与讲话设置独立；不附用户歌曲/索引、账号、私人参考克隆或额外讲话轮换功能。
+
+用户选定曲库文件夹后可在“翻唱制作”登记自动入库，每5秒仅扫描指定目录第一层，内容去重、不自动唱/发QQ；新机器不预置开发机目录。本地按登记歌名优先，可用任何人的翻唱，普通原歌手提示不能把本地翻唱排除，明确指定版本才限制。目录/曲目索引均留使用者本机，不随部署包分享。
+
+网易云同样原唱优先而非强制原唱：无可用原唱时可选择完整同名的普通演唱来源，排除非演唱音轨并核对完整音频权限；用户明确指定版本时不放宽。详见[自动选源规则](references/cover-routing-and-reuse.md#网易云自动选版本)。未指定RVC变调时沿用面板，不擅自按男女升降八度。
 
 用户要撒娇女友、御姐女王、懒羊羊风格近似、台湾女生巨甜普通话，或傲娇大小姐、迷糊女大学生、霸道女总裁、男高中生、男大学生时，读[固定音色包](references/breeze-saved-presets.md)。随包保存了十一款实际 `.breeze`，不是只有提示词；按选中项校验导入，保留当前讲话、RVC和回复方式。台湾女生这款是**讲普通话并带自然台湾腔**，不是台语，也不是抹去台湾腔的播音普通话；懒羊羊是**动画角色风格近似**，不是慵懒女声、官方原声或真人克隆。
 
@@ -49,7 +55,7 @@ description: 为已安装 DeepSeek Harness 的用户按需部署、补齐或修�
 1. 读用户要求和工作区规则，只配置用户选择的能力。“完整部署”包括准备模块，但不等于允许公开评论、点赞、私信、改资料和定时社交。
 2. 检测现有 CLI、profile、版本、进程、插件、目录和容量，默认复用。只问无法检测的必要信息。账号可让用户填面板；不索取密码、验证码、Cookie、Token 到对话中。
 3. 不清空 `~/.dsh`、浏览器资料或会话。路径使用实际用户选择的绝对路径，不写死开发者盘符、用户名、QQ号或端口。Windows推荐 ASCII 无空格路径，例如 `<ROOT>/Aurabot/{plugin,data,qq-chats,voice,sing-cpu}` 和 `<ROOT>/SnowLuma`。
-4. 先核对当前上游文档、发行包条款、源码与接口。流程基于 Aurabot 1.1.11、dsh-pet 0.3.8 的一次经验；版本不匹配时停止自动补丁并重新适配，不强行套用。
+4. 先核对当前上游文档、发行包条款、源码与接口。旧链记录基于 Aurabot 1.1.11、dsh-pet 0.3.8，统一翻唱路由另在 Aurabot 1.1.24 / 模块API 1验证；版本或接口不匹配时停止自动补丁并重新适配，不强行套用。
 
 新安装组件默认选择执行时官方最新稳定发行版，并动态核对对应平台的官方资产及摘要；用户指定版本除外。不把历史案例的版本号写成将来的固定安装目标或版本黑名单；已有正常组件保持复用，升级另按用户范围处理。
 
@@ -84,7 +90,7 @@ description: 为已安装 DeepSeek Harness 的用户按需部署、补齐或修�
 - `assets/breeze-voice/`、`scripts/prepare-breeze-voices.mjs`：可配置路径的 Breeze C++ 语音适配与原有四款合成音色准备，不含运行时或参考音频；GPU兼容开关按证据选择，详见 [Breeze](references/breeze-tts2-cpp.md)。
 - `assets/breeze-presets/`、`scripts/install-breeze-presets.mjs`：十一款已保存的小型合成音色、SHA256清单及独立非商用许可；默认只检查，按需导入，不覆盖已有不同文件，不改当前选择，详见[固定音色包](references/breeze-saved-presets.md)。
 - `assets/voice-controls/`、`scripts/install-voice-module.mjs`：独立可见音色/回复方式面板，安装默认只检查，替换自定义代码需备份；详见[音色与回复控制](references/voice-controls.md)。
-- `assets/breeze-cover/`、`scripts/test-breeze-cover.mjs`：Breeze CPP/RVC 本机翻唱、独立清唱/伴奏输出、进度和试听面板；安装器支持 `--module breeze-cover`，可选 `song-library` 适配原生RVC默认版本。复用实际分离/换声环境，不含基础模型或歌曲，详见[本机翻唱插件](references/breeze-cover.md)。
+- `assets/breeze-cover/`、`scripts/test-breeze-cover.mjs`、`scripts/test-cover-*.mjs`：统一QQ引擎与单次发送、本地/网易云选源、版本自动排序、清唱/伴奏导出、进度试听及成品复用开关。安装器会复制完整路由/设置/本地匹配依赖；已有或选择 `song-library` 时审查协作版，避免旧缓存抢答。离线测试默认不启动真实宿主、模型或QQ；真实已安装工具契约测试须显式设置审查过的插件目录，仍用隔离数据。详见[本机翻唱插件](references/breeze-cover.md)。
 - `scripts/fetch-verified.py`、`scripts/inspect-rvc.py`、`scripts/install-rvc-models.py`、`scripts/test-rvc-voices.mjs`：分块校验下载、安全检查推理权重、只加选中模型和短片段验收；候选是历史元数据，不自动安装，详见[追加音色](references/rvc-extra-voices.md)。
 - `scripts/repair-qq-gateway.ps1`：默认脱敏只读；用户要求修复后才 `-Repair`，已核对唯一机器人、已加载防护且无近期崩溃才单次接入与重连。不改自动接入/社交设置、不重置凭据；详见[网关断线](references/snowluma-setup-and-reuse.md#控制台在运行但消息网关断线)。
 - `assets/song-library/`：成品库优先扩展源文件；只在选择该功能且兼容性/权限检查通过后安装。不是原插件功能，不含任何用户歌曲、索引或模型；详见成品优先参考。

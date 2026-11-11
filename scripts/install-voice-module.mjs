@@ -9,7 +9,7 @@ export function install({pluginDir,dataDir,module,apply=false,replace=false,back
   const files={
     'breeze-voice':['loudness.mjs','service.mjs','index.mjs'],
     'voice-controls':['panel.js','index.mjs'],
-    'breeze-cover':['separate.py','studio.mjs','panel.js','index.mjs'],
+    'breeze-cover':['separate.py','studio.mjs','saved-profile.mjs','local-sources.mjs','folder-library.mjs','qq-router.mjs','panel.js','index.mjs'],
     'song-library':['library.mjs','arrangement.mjs','acappella.mjs','request-guard.mjs','index.mjs'],
   };
   if(!Object.hasOwn(files,module))throw Error('Select breeze-voice, voice-controls, breeze-cover or song-library');
@@ -32,7 +32,7 @@ export function install({pluginDir,dataDir,module,apply=false,replace=false,back
     }
     const studio=readFileSync(join(plugin,'src/song/studio.js'),'utf8');
     for(const marker of ['convertSpeech','search','request'])if(!studio.includes(marker))throw Error('Song integration contract changed; review before installation');
-    for(const marker of ['tool:','rule:','onDispose:'])if(!api.includes(marker))throw Error('Cover module API contract changed; review before installation');
+    for(const marker of ['tool:','rule:','onDispose:','command:','every:','on:'])if(!api.includes(marker))throw Error('Cover module API contract changed; review before installation');
   }
   const source=fileURLToPath(new URL('../assets/'+module+'/',import.meta.url));
   const names=files[module];

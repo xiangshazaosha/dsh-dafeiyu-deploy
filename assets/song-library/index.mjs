@@ -1,5 +1,5 @@
-import { libraryRoot, match, saveNewCover, readIndex, writeIndex } from './library.mjs';
-import { installRequestGuard } from './request-guard.mjs';
+import { libraryRoot, match, saveNewCover, readIndex, writeIndex,sourceHint } from './library.mjs?sourcehint=2';
+import { installRequestGuard } from './request-guard.mjs?routing=reuse1';
 import { requestedArrangement, isArrangementFollowUp, readLastSong, rememberSong } from './arrangement.mjs';
 import { ensureAcappella, captureVocalStem } from './acappella.mjs';
 import { join, isAbsolute } from 'node:path';
@@ -7,13 +7,14 @@ import { createHash } from 'node:crypto';
 import { readFileSync } from 'node:fs';
 
 export default {
-  id: 'song-library', name: '翻唱成品优先', version: '1.2.1', api: 1,
+  id: 'song-library', name: '翻唱成品优先', version: '1.4.3', api: 1,
   description: '主人私聊点歌优先发送歌曲库中的既有翻唱；没有匹配时保留原有点歌流程。',
   setup(api) {
     const allowed = msg => msg?.kind === 'private' && api.isOwner(msg.userId) &&
       String(msg.chatId) === 'private:' + String(msg.userId);
     let simulatedLast = null;
     let nativeVocalLast = null;
+    const fresh=text=>api.config().ext?.['breeze-cover']?.reuseFinished===false||/重新制作|重新翻唱|重新唱|重唱|重做|另做一版|换个新音色|用新音色/.test(String(text||''));
     const resolveSong = (text, options = {}) => {
       const root = libraryRoot(api.config());
       if(api.config().ext?.['breeze-cover']?.rvcArrangement==='acappella'&&!requestedArrangement(text))text=String(text||'')+' 清唱版';
@@ -22,7 +23,7 @@ export default {
         if (!last) return { kind: 'needs-title' };
         text = `${last.title} ${last.artist} ${text}`;
       }
-      return match(root, text, options);
+      const cfg=api.config();return match(root, text, {...(cfg.song?.voice?{engine:'rvc',voice:cfg.song.voice,pitch:Number(cfg.song.pitch)||0}:{}),...options});
     };
     const ambiguous = r => '歌曲库有多个同名版本，请说歌手或版本：' + r.entries.map(e => `${e.title} ${e.artist} ${e.version}`.trim()).join('；');
     const play = async (chatId, r, options = {}) => {
@@ -46,8 +47,11 @@ export default {
       return '找到之前做好的版本，已经发给你啦。';
     };
     api.on('message', async msg => {
-      if (/breeze/i.test(String(msg?.text||'')))return false;
+      if(fresh(msg?.text))return false;
+      if(/breeze/i.test(String(msg?.text||'')))return false;
+      try{if(api.use('breeze-cover')?.resolveEngine?.(msg?.text)==='breeze')return false;}catch{return false;}
       if (!allowed(msg) || !api.config().song?.enabled || (!requestedArrangement(msg.text) && !/(唱|点歌|放歌|播放|放一|放给|再放|发.*(?:歌|语音)|再听|想听|要听|我说的是|听一听|听一下|听听|再来|来一遍|再发|发给我|发一遍|重播|回放)/.test(String(msg.text || '')))) return false;
+      try{if(api.use('breeze-cover')?.hasUnifiedFinished?.({song:msg.text}))return false;}catch{return false;}
       let result;
       try { result = resolveSong(msg.text, { simulated: Boolean(msg.raw?.simulated) }); } catch (error) {
         api.log.warn('歌曲库读取失败：', error.message);
@@ -74,6 +78,7 @@ export default {
         if (!cfg.enabled || !cfg.song?.enabled) return '翻唱功能目前关闭，请先打开。';
         if (!allowed(msg)) return '歌曲库点歌目前只支持主人私聊。';
         if (!arg.trim()) return '唱哪首？可以说歌名和版本。';
+        try{if(fresh(arg)||api.use('breeze-cover')?.resolveEngine?.(arg)==='breeze'||api.use('breeze-cover')?.hasUnifiedFinished?.({song:arg})){if(msg.raw?.simulated)return '模拟中不开始翻唱制作或发送';return api.use('song')?.request({song:arg,chatId:msg.chatId})?.message||'翻唱路由未就绪';}}catch(error){return error.message;}
         const pitch = arg.match(/^(.*?)\s+([+-]\d{1,2})$/);
         if (pitch && Number(pitch[2]) !== Number(cfg.song.pitch || 0)) return api.use('song')?.request({ song: pitch[1], pitch: Number(pitch[2]), chatId: msg.chatId })?.message || '翻唱模块不可用';
         const name = pitch ? pitch[1].trim() : arg.trim();
@@ -143,12 +148,12 @@ export default {
       } catch (error) { api.log.warn('更新新歌索引/上一首失败：', error.message); }
     });
     const requestGuard = installRequestGuard(api, resolveSong, play);
-    api.context(() => '歌曲库优先发送已有成品；清唱=只发换声后人声、不混伴奏。请求清唱时须在工具song字段保留“清唱版”，不能省略为普通歌名。用户说“上一首改成清唱/我要听清唱版的”由歌曲库上一首记录解析，不擅自更换歌曲。没有人声源时说明缺失，不把混音成品冒充清唱；用户只想重听时不自行添加歌手、升降调或换版。');
+    api.context(() => '成品优先开关='+(!fresh('')?'开启':'关闭，必须用qq_song_cover按当前音色重新制作，不播放旧成品')+'，只可复用与当前引擎、音色、变调及清唱/伴奏设置相符的成品；切换音色后不能仍发旧声音。用户明确说重新制作/重新翻唱时同样不复用旧成品。清唱=只发换声后人声、不混伴奏。请求清唱时须在工具song字段保留“清唱版”。用户说上一首改成清唱时按上一首解析，不擅自换歌。只想重听时不自行改音色、升降调或换版。本地原曲优先与旧成品复用是不同策略。');
     api.route('/match', async req => {
       const query = api.core.http.query(req).q || '';
       try { const r = resolveSong(query); return { ok: true, kind: r.kind, title: r.entry?.title || '', artist: r.entry?.artist || '', arrangement: r.entry?.arrangement || (r.kind === 'match' ? 'mixed' : ''), count: r.entries?.length || 0, guard: requestGuard.status() }; }
       catch (error) { return { ok: false, message: error.message }; }
     });
-    return { guardStatus: requestGuard.status };
+    return { guardStatus: requestGuard.status, preview:resolveSong,sourceHint:q=>sourceHint(libraryRoot(api.config()),q) };
   }
 };

@@ -1,6 +1,9 @@
 // Keep the public request method synchronous, like Aurabot 1.1.11.
 // The model tool, HTTP panel and /sing all call this same exported song object.
 import { requestedArrangement, isArrangementFollowUp, newAcappellaQuery } from './arrangement.mjs';
+const nativeGuard=Symbol.for('dsh.cover.native.dispatch.v1');
+const currentRequest=song=>song.request?.[nativeGuard]?.inner||song.request;
+const setRequest=(song,fn)=>{const outer=song.request?.[nativeGuard];if(outer)outer.inner=fn;else song.request=fn;};
 export function installRequestGuard(api, resolveSong, play) {
   let mounted = null;
   const inFlight = new Set();
@@ -15,19 +18,20 @@ export function installRequestGuard(api, resolveSong, play) {
     return result;
   }
   function restore() {
-    if (mounted && mounted.song.request === mounted.wrapped) mounted.song.request = mounted.original;
+    if (mounted && currentRequest(mounted.song) === mounted.wrapped) setRequest(mounted.song,mounted.original);
     mounted = null;
   }
   function ensure() {
     const song = api.use('song');
     if (!song || typeof song.request !== 'function') return false;
-    if (mounted?.song === song && song.request === mounted.wrapped) return true;
+    if (mounted?.song === song && currentRequest(song) === mounted.wrapped) return true;
     restore();
-    const original = song.request;
+    const original = currentRequest(song);
     function wrapped(args = {}) {
       const cfg = api.config();
       if (args.chatId !== `private:${cfg.ownerQQ}`) return original.call(song, args);
       if (!cfg.enabled || !cfg.song?.enabled) return { ok: false, message: '翻唱功能目前关闭，没有开始制作。' };
+      if(cfg.ext?.['breeze-cover']?.reuseFinished===false||/重新制作|重新翻唱|重新唱|重唱|重做|另做一版|换个新音色|用新音色/.test(String(args.song||'')))return {ok:false,message:'重新翻唱需要统一制作路由接管；当前没有复用旧成品或启动旧引擎缓存，请检查翻唱制作扩展。'};
       if(cfg.ext?.['breeze-cover']?.rvcArrangement==='acappella'&&!requestedArrangement(args.song)){const name=String(args.song||args.file?.split(/[\\/]/).pop()||'').trim();args={...args,song:name+' 清唱版'};}
       let result;
       try { result = decide(args); }
@@ -53,7 +57,7 @@ export function installRequestGuard(api, resolveSong, play) {
       api.log.info('制作入口命中歌曲库，跳过网易云与RVC：' + result.entry.title);
       return { ok: true, reused: true, queued: false, message: result.kind === 'needs-acappella' ? '正在用已保留的人声导出清唱，不联网取歌、不重跑RVC，完成后直接发送。' : '找到已制作的成品，正在直接发送，无需网易云下载或重新翻唱。' };
     }
-    song.request = wrapped;
+    setRequest(song,wrapped);
     mounted = { song, original, wrapped };
     return true;
   }
@@ -61,5 +65,5 @@ export function installRequestGuard(api, resolveSong, play) {
   api.on('module/start', id => { if (id === 'song') ensure(); });
   api.every(1000, ensure, '保持成品库制作入口保护');
   api.onDispose(restore);
-  return { status: () => ({ mounted: Boolean(mounted && api.use('song') === mounted.song && mounted.song.request === mounted.wrapped), pendingSends: inFlight.size }), preview: decide };
+  return { status: () => ({ mounted: Boolean(mounted && api.use('song') === mounted.song && currentRequest(mounted.song) === mounted.wrapped), pendingSends: inFlight.size }), preview: decide };
 }

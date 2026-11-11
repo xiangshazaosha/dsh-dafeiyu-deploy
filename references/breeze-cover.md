@@ -1,61 +1,48 @@
-# Breeze CPP / RVC 本机翻唱与清唱选择
+# Breeze CPP / RVC 翻唱制作与清唱
 
-用户要求用 `.breeze` 音色唱已有歌曲、把分离/换声/混音固化为插件，或给 Breeze、RVC 增加清唱按钮时读取。这是随包提供的独立用户扩展，不是声称 Breeze 官方保证唱歌保真。只部署本次选择的部分。
+部署 `.breeze` 实验翻唱、统一 QQ 点歌引擎、清唱/伴奏或本机试听时读取。随包是可安装用户模块源码，不是只有提示词；Breeze 唱歌仍属实验功能，不承诺旋律保真。
 
-## 随包有什么
+## 当前界面：一处设置，一处制作
 
-- `assets/breeze-cover/{index.mjs,studio.mjs,panel.js,separate.py}`：实际可安装源码，不只是提示词。复用本机 FFmpeg、CPU 分离环境、已安装 Breeze CPP 或 RVC；不改 Aurabot 核心文件。
-- `assets/voice-controls/`：更新后的音色页，讲话、Breeze翻唱、RVC翻唱各自保存；两个引擎分别选择清唱/带伴奏。
-- `assets/song-library/`：可选的成品优先扩展更新，使主人私聊原生 RVC 请求继承清唱默认值，明确指定版本优先。不要为装翻唱面板而强制安装它、缩小原来的群聊/非主人权限；见[成品库](song-library.md)。
-- 既有[固定音色包](breeze-saved-presets.md)仍按需导入实际 `.breeze`。不打包歌曲、分离后人声、参考录音、成品、个人设置、账号或基础权重；也不打包额外的讲话轮换功能。
+- **系统→音色切换→翻唱·统一设置**：唯一声音设置入口。选择引擎、该引擎的具体音色、清唱/伴奏、Breeze 保留旋律或 RVC 变调，以及 QQ 默认片段长度。只显示当前引擎的参数，另一引擎的备用值保留，不代表一起运行。
+- **系统→翻唱制作**：原“Breeze翻唱”菜单的新名字。只读统一声音摘要；选歌曲、片段起点、单次长度及歌词，制作/试听、查看 QQ 请求实际来源/引擎/音色和发送结果。不再另存一套声音参数。
+- “已翻唱成品”按钮立即保存：开启时只复用符合当前引擎和音色等参数的成品；关闭后重新换声，但保留人声/伴奏分离缓存。它不是本地原曲开关。具体路径、索引和故障处理见[统一路由与复用](cover-routing-and-reuse.md)。
+- 普通聊天讲话音色、回复方式与翻唱分开保存。安装或保存设置不启动制作，不向 QQ 试发。
 
-## 前置检查与最小安装
+## 源码与前置
 
-1. 发现实际插件、数据、工作区及当前 API 地址；可用 `scripts/aurabot.ps1 -Mode Status`，不要固定 D 盘、用户名或开发时端口。只读提取所需字段，不输出整个配置。已有模块先识别与备份，正在制作/发送时先等安全节点，不重启 DSH 或 QQ。
-2. 检查当前模块 API 1：`lib/config/settings/saveSettings/route/onDispose/use/tool/rule`；`core/http` 有 `raw/query/send`；`core/store` 有 `dataDir`；`song/netease.songUrl` 仍返回 `{url,trial}`。检查内置 song 模块实际导出 `status/search/convertSpeech`，后者接受 `(wav,{voice,pitch,outDir})` 并返回本机文件，不调用 `request` 自动发送。已验证 Aurabot 1.1.24；不兼容时停止安装并适配，不绕过宿主安全模式。
-3. 两种引擎都需要实际 `config.song.root` 下的 `bin/ffmpeg.exe`、`env/Scripts/python.exe`、`separator-models/<song.separatorModel>` 及同名 YAML；依赖包含 torch 与 audio-separator。只在缺失且用户选择该功能时按[CPU准备](rvc-cpu.md)补齐分离环境及其依赖，解释体积/后端/许可，不为了 Breeze 换声默认下载五款 RVC 模型。分离工作进程使用 `-I`，不从未知项目目录导入 Python 包，不自动下载缺失模型。
-4. Breeze 路线按[CPP语音](breeze-tts2-cpp.md)复用已核对运行时，`ext.voice.breezeRoot` 指向实际根，`breeze-runtime.json.sourceRoots` 必须允许实际 `<Aurabot数据>/songs`，才能把本插件分离的人声交给转换服务；仅添加此必要目录，保留其余设置，不开放整盘。加载随包可配置的 `breeze-voice`，核对 `breezeVoices/breezeConvert`；不从开发机器复制其私人语音模块。RVC 路线则复用已校验的选定权重。Breeze 的 `.breeze` 不改后缀冒充 RVC `.pth`。
-5. 执行隔离测试 `node --test scripts/test-breeze-cover.mjs scripts/test-install-voice-module.mjs scripts/test-song-library.mjs`，另运行 `node scripts/test-voice-controls.mjs`。Python 用可用解释器 `ast.parse` 检查 `assets/breeze-cover/separate.py`，不导入 torch 或触发模型下载。可临时设置环境变量 `DSH_SONG_TEST_FFMPEG=<已安装ffmpeg>` 启用歌曲库合成测试音验证，测后移除该变量；默认不碰 QQ、歌曲和模型。
-6. 由 Agent 运行安装器（尖括号替换为实际绝对路径，以下默认只检查）：
+`assets/breeze-cover/` 包含 `index.mjs`、`studio.mjs`、`saved-profile.mjs`、`qq-router.mjs`、`local-sources.mjs`、`folder-library.mjs`、`panel.js` 和 `separate.py`。复制时不得漏掉新依赖；`scripts/install-voice-module.mjs --module breeze-cover` 已使用白名单完整安装，默认只检查。
 
-   ```text
-   node scripts/install-voice-module.mjs --plugin-dir <插件目录> --data-dir <数据目录> --module breeze-cover
-   node scripts/install-voice-module.mjs --plugin-dir <插件目录> --data-dir <数据目录> --module voice-controls
-   ```
+复用实际 FFmpeg、Python 分离环境、BS-RoFormer 权重/配置、Breeze CPP 或 RVC 服务，不修改包管理器共享的 Aurabot 核心代码。本包不含这些环境、模型、歌曲、成品、索引、参考音频或私人声音。
 
-   通过后分别加 `--apply`。已有不同自定义文件先审查，需要替换才加 `--replace --backup-dir <新的模块外备份目录>`；不要直接覆盖。选择既有成品库适配时再以同样方法安装 `--module song-library`。安装器不写用户配置、不下载模型、不启动服务、不发送QQ。
-7. 通过实际 API 的 `/modules/reload` 仅加载新增/更新的目标模块，检查 `running=user,error=''`，独立面板 `builtin=false,panel=true`。不要为显示按钮重启网关。核对 `/ext/breeze-cover/state` 的 `ready/rvcReady`、真实音色列表、两个版本设置；未准备的引擎明确不可用。首次制作先选列表内的具体音色；若未导入默认撒娇预设就选已有音色，不自动下载或重生成全部声音。
+本轮统一路由在 Aurabot 1.1.24 / 模块 API 1 验证。已有环境保持复用；更换宿主版本先检查实际对象引用及接口，不用历史版本号强制降级。需要 `api.on/every/command/onDispose/use/lib/route/tool/rule`、`core.http.raw/query/send`，以及 `song.request/search/status/convertSpeech` 等真实契约。新的制作/工具入口必须重新验证是否经过同一个 request 包装。
 
-## 可见入口及真实行为
+## 按需安装或升级
 
-Aurabot 1.1.24 验证入口：**DSH → Aurabot → 系统 → 音色切换**；Breeze 实验翻唱卡和 RVC 卡各有输出版本选择，保存互不串改讲话/回复方式。制作入口：**系统 → Breeze翻唱**，支持引擎、具体音色、清唱/带伴奏、导入本机文件/已有缓存/网易云候选、起点和时长。版本不同以实际导航证据为准。静态组件渲染和 API 测试不是已经目视操作过屏幕。
+1. 找到真实插件、数据根、工作区和本机 API。用 `scripts/aurabot.ps1 -Mode Status` 等只读手段，不固定开发机盘符、用户名或端口，不打印整份配置。
+2. 查看原生 RVC 的 current/queue、翻唱制作 busy，以及 QQ active。制作、发送或异步清唱导出尚未结束时等待安全节点，不靠重启停止任务。
+3. 检查已有用户模块及私有修改，备份后再替换。只加本机制作可选 `breeze-cover`、`voice-controls`；如果已有/选择成品库，也同步审查兼容版 `song-library`，避免旧缓存监听抢答。主人私聊适配可能缩小旧 `/sing` 的群聊功能，需保留/另适配用户原有权限，不静默改变。
+4. 各模块先运行安装器 check-only；确认范围后才 `--apply`。已有不同源码要求 `--replace --backup-dir <新目录>`，不能把该选项当跳过审查的手段。入口文件最后替换，仅重载目标模块，不动 DSH/QQ、总开关、自动互动或账号。
+5. 核对三个模块状态、菜单、统一 profile、路由 guardInstalled。按[统一路由参考](cover-routing-and-reuse.md)做只读预览和隔离测试；用户主动点歌的生产任务才可完成后提交其指定版本。
 
-流程：歌曲片段 → CPU分离 → Breeze CPP 或选定RVC换声 → 对齐长度 → 导出两个版本。清唱 MP3 只输入换声后人声，带伴奏 MP3 才输入伴奏；分离残留可能仍有少量伴奏，不承诺零串音。两个文件独立保留，可分别本机播放，不能仅把混音改名成清唱。输出约 -16 LUFS / -1.5 dBTP，仍需试听质量。
+安装入口不重置已有选择。全新部署只选了Breeze翻唱时，要在用户所选范围内明确保存 `engine=breeze` 和可用音色并读回；不能依赖为兼容旧用户而保留的RVC默认值，装完却把QQ交给另一引擎。
 
-- 目前只支持 **1–180秒片段**，默认10秒。不是已完成任意长整曲支持；导入最多64MB，下载最多60MB。网易云只使用现有授权来源，拒绝试听/无权限音源，不代替用户选定同名版本。
-- Breeze `keepMelody` 为0/1/2，可填对应片段歌词改善咬字。先短片段试听；1/2可能多保留原声特点，不能把保留旋律开关说成必定保真，也不能把TTS读歌词当唱歌。
-- 一次处理一项，最多排队三项；同源同音色/参数复用完成文件。取消会停止自有处理子进程，Breeze转换调用可能需等待返回；不终止共享语音服务。中断任务重载后不自动重跑。分离缓存复用不等于允许更换源后复用错误人声。
-- 本机制作默认**不发送QQ**。两个音频播放器各有显式发送按钮并要求确认。QQ未连接时保留本机试听，不擅自修复/重连；发送另验收。保持当前声音、回复模式、QQ总开关、试运行和社交设置。
-- RVC默认版本保存于 `ext['breeze-cover'].rvcArrangement`；本机面板和本插件工具直接使用它。原生 `/sing` / `qq_song_cover` 继承此默认需要选择并加载匹配的 `song-library` 更新，仅主人私聊受其保护；明确“带伴奏/清唱”覆盖默认。未安装该适配就如实说明原生入口不会自动继承，不假称只存了设置就全局生效。
-- 本插件成品位于实际 `<数据>/songs/breeze-cover/jobs/<id>`，任务索引位于 `<数据>/modules-data/breeze-cover`，导入文件也在后者。不是自动加入持久成品库；不把这些输出再次列为“原曲缓存”。
+## 真正的制作链
 
-## 给 DSH 的工具与简短说法
+原曲→截取片段→分离人声/伴奏→当前引擎换声→导出清唱及带伴奏。清唱只含转换后人声；另一个文件才混入伴奏。一个任务保留两份文件不代表两种引擎一起跑。
 
-随包模块通过 `api.tool` 注册主人私聊工具（仅 `level=full` 且实际轮次主人校验通过）；未在当前宿主出现时先查模块加载/工具权限，不只贴提示词假称已接通：
+当前通用分离脚本使用本机 audio-separator / BS-RoFormer CPU 路线，Breeze CPP 的 Vulkan 只加速后续换声。不要把“Breeze 用显卡”等同于全链 GPU。NVIDIA CUDA 或其它分离后端须按目标环境单独安装和实测，不能只改文案就声称加速。同原曲、起点、长度及模型未变化时，验证过的人声/伴奏缓存可跨音色复用。
 
-1. `breeze_cover_sources`：无 query 列本机来源和音色；有 query 搜歌曲候选，不制作。
-2. `breeze_cover_create`：`engine=breeze|rvc`、具体 `voice`、`arrangement=acappella|mixed`，来源取已确认的 `sourceId` / `songId` 或允许目录内 `file`，另有 `startSec/durationSec/lyrics/keepMelody/pitch`。返回任务ID后不重复提交。
-3. `breeze_cover_status`：查询ID，可取消，不发送。
-4. `breeze_cover_send`：仅主人明确要求发送后，传任务ID及明确版本；只发主人私聊。不要用真实发送来验证安装成功。
+支持 1–180 秒片段，先做 10 秒本机试听。QQ 默认时长与本机单次时长分开；不能用短片段冒充整首。Breeze `keepMelody=0/1/2` 保留不同数量的原音频声学信息，不是越大必然越好，可能保留原唱声音；歌词可帮助咬字，但不保证唱腔保真。RVC 的变调只对 RVC 有效。
 
-可给用户这样说：
+本机制作使用 `breeze_cover_create`，不会自动发 QQ；QQ 点歌使用 `qq_song_cover`，已经按统一引擎分流。不得同一请求再调用另一制作工具或旧脚本。Breeze 未就绪/失败就报告，不改发 RVC 或旧库成品；实际结果看任务 engine/voice/backend。QQ 任务自带单次提交，不能再手动 send 一遍。
 
-> 使用已经安装的“Breeze翻唱”插件，用我指定的Breeze或RVC音色处理《歌名＋歌手，或已导入文件》。先做10秒清唱试听，同时保留带伴奏版。Breeze可试保留旋律2并填写片段歌词；版本不明确先让我确认。提交后查询进度，不重复创建。效果不好如实说明，不把读歌词当唱歌。未经我明确要求，不要发送QQ或重连网关。
+网易云普通点歌是原唱优先，不要求必须找到原唱本人录音；可用其它同名演唱来源制作，但不得冒称原唱。明确版本要求、完整音频可用性与非演唱来源过滤见[统一路由参考](cover-routing-and-reuse.md#网易云自动选版本)。RVC未指定变调时沿用面板，不因男女声音擅自升降八度。
 
-## 验收、回退和已知边界
+## 验收与回退
 
-先隔离验证两个设置独立、非法输入拒绝、面板真实提供两种版本、本机制作不自动发送；再用用户有权使用的10秒歌曲实测分离/换声/两个文件可解码。清唱与混音核对独立文件和各自输入，记录耗时及实际后端，用户试听决定唱腔/音色效果。无需QQ的部署可以在本机完成，QQ外发另标未测。
+运行 `node --test scripts/test-breeze-cover.mjs scripts/test-cover-*.mjs scripts/test-song-library.mjs scripts/test-install-voice-module.mjs`。离线默认不调用任何真实账号、网络、模型或宿主；真实已安装 `qq_song_cover` 的隔离契约测试需显式设置 `DSH_AURABOT_PLUGIN_DIR` 为已审查的插件目录，仍使用临时数据和模拟网关，不做真实发送。
 
-开发机2026-11-10真实样本：RVC完成10秒CPU换声并导出两版；Breeze也完成两版。Breeze默认0、无歌词时识别几乎失败；2加片段歌词后可辨歌词改善，仍**没有主观旋律/音色保真确认**。31项歌曲库隔离回归通过，不等于另一台电脑已验收、QQ已播放或整曲已支持。共享包不含这些测试歌曲或成品。
+源码/API、静态组件渲染、真实音频生成、QQ 提交与收件人播放是不同验收层。开发机已验证真实短片段及本地原曲的 60 秒 Breeze 制作/提交，但收件播放、主观音色和另一台机器仍须分别确认；不随包带测试歌曲。
 
-停用 `breeze-cover` 只撤本插件与工具；回复设置继续独立。回退恢复模块备份并只重载目标模块，不覆盖整份旧配置，不删除导入/成品。原生RVC默认偏好由歌曲库适配读取，停用本插件并不会自动清除该偏好；需要回到带伴奏时单独改 `rvcArrangement=mixed` 或撤回这项适配，保留其余用户配置。
+停用/回退只恢复所选模块的备份并重载，保留配置、导入原曲、成品、私人声音和索引。`qq-requests.json` 中在途任务重载后不自动重做或重发；规则升级失效的旧候选应重新点歌，确需继续必须由主人明确要求，不能以部署为由恢复旧外发任务。
