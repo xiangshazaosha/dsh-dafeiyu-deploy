@@ -33,12 +33,12 @@ DSH桌面说明：<https://github.com/deepseek-ai/deepseek-harness/tree/master/a
 | QQ工作区 | `workspaceDir`或`AURABOT_WORKSPACE` | 通过`/save`明确填写并查实时状态 |
 | TTS环境 | `AURABOT_PYENV` | `<ROOT>/Aurabot/voice` |
 | 翻唱环境 | `song.root` | `<ROOT>/Aurabot/sing-cpu`或GPU独立环境 |
-| SnowLuma | `snowluma.dir` | 用户安装目录，直接有`index.mjs` |
+| NapCatQQ | 独立程序/配置目录；Aurabot `gateway=onebot` | 用户指定目录，确认实际 launcher 与账号配置；端点字段见[NapCat接入](napcat-deployment.md) |
 | B站抽帧 | `bili.ffmpegPath` | 与翻唱FFmpeg不是同一设置 |
 | 抖音浏览器 | `douyin.browserPath`及源码资料路径 | 独立资料目录，不碰日常浏览器 |
 | DSH会话/缓存 | DSH_HOME、Electron数据、包管理器store | 不等同于Aurabot数据 |
 
-启动前环境变量才对新进程生效；优先使用仅应用启动器传变量，避免全局影响其他软件。不能说“程序在D盘，所以数据也都在D盘”。`index.mjs`是SnowLuma入口，不是Aurabot目录。
+启动前环境变量才对新进程生效；优先使用仅应用启动器传变量，避免全局影响其他软件。不能说“程序在D盘，所以数据也都在D盘”。NapCat 程序目录、其 `config`、QQ资料、Aurabot数据目录和 DSH profile 各自定位，不混为一个安装目录。
 
 ## 已有目录迁移
 

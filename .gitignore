@@ -53,3 +53,8 @@ backups/
 **/jobs.json
 **/validated-stems.json
 **/歌曲库索引.json
+
+# Personal OneBot credentials and account-specific gateway configuration
+**/napcat-connection*.json
+**/onebot11*.json
+**/webui.json
